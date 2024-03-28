@@ -1,4 +1,5 @@
 ﻿using API.Endpoints;
+using API.Handlers;
 using Core.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
@@ -18,6 +19,10 @@ public static class HostingExtensions
         });
 
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddExceptionHandler<GeneralExceptionHandler>();
     }
 
     public static WebApplication ConfigurePipeline(this WebApplication app, ConfigurationManager configuration)
@@ -32,6 +37,8 @@ public static class HostingExtensions
         {
             app.UseHttpsRedirection();
         }
+
+        app.UseExceptionHandler(_ => { });
 
         app.AddWeatherForecastEndpoints();
         app.AddProductsEndpoints();

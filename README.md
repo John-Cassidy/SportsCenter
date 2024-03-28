@@ -33,3 +33,15 @@ The `-s` option specifies the startup project, which is the project that the too
 ```powershell
 dotnet ef database update -p server/Infrastructure -s server/Api
 ```
+
+## Implement Error Handling
+
+[Youtube Video](https://www.youtube.com/watch?v=uOEDM0c9BNI)
+
+### Option 1: IExceptionHandler Interface for handling unhandled exceptions globally
+
+[Youtube Video](https://www.youtube.com/watch?v=f4zMGR3m70Y)
+
+### Option 2: Result Pattern for handling both handled/unhandled expceptions
+
+[Article](https://www.milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern)

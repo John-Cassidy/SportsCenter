@@ -1,7 +1,7 @@
 ﻿using Core.Entities;
 using Core.Repositories;
 using Infrastructure.Data;
-using Infrastructure.Exceptions;
+using Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
