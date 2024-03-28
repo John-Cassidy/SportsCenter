@@ -1,5 +1,7 @@
 ﻿using API.Endpoints;
+using Core.Repositories;
 using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions;
@@ -14,6 +16,8 @@ public static class HostingExtensions
         {
             opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+
+        builder.Services.AddScoped<IProductRepository, ProductRepository>();
     }
 
     public static WebApplication ConfigurePipeline(this WebApplication app, ConfigurationManager configuration)
