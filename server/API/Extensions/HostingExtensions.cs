@@ -1,4 +1,6 @@
 ﻿using API.Endpoints;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions;
 
@@ -8,6 +10,10 @@ public static class HostingExtensions
     {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddDbContext<SportsCenterContext>(opt =>
+        {
+            opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
     }
 
     public static WebApplication ConfigurePipeline(this WebApplication app, ConfigurationManager configuration)
