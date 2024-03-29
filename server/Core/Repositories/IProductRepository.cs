@@ -2,6 +2,7 @@
 
 namespace Core.Repositories;
 
+[Obsolete("This class is obsolete. Use IRepository<T> instead.", true)]
 public interface IProductRepository
 {
     Task<Product> GetByIdAsync(int id);

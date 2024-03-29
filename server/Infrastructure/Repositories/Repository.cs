@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Exceptions;
 using Core.Repositories;
+using Core.Specifications;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,25 +17,16 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         _context = context;
     }
 
-    public async Task<IList<T>> GetListAsync(params Expression<Func<T, object>>[] includes)
+    public async Task<IList<T>> GetListAsync(ISpecification<T> spec)
     {
-        IQueryable<T> query = _context.Set<T>();
-        foreach (var include in includes)
-        {
-            query = query.Include(include);
-        }
+        IQueryable<T> query = ApplySpecification(spec);
         return await query.ToListAsync();
     }
 
-    public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+    public async Task<T> GetByIdAsync(ISpecification<T> spec)
     {
-        IQueryable<T> query = _context.Set<T>();
-        foreach (var include in includes)
-        {
-            query = query.Include(include);
-        }
-
-        return await query.FirstOrDefaultAsync(p => p.Id == id)
+        IQueryable<T> query = ApplySpecification(spec);
+        return await query.FirstOrDefaultAsync()
             ?? throw new NotFoundException($"{typeof(T).Name} not found.");
     }
 
@@ -54,5 +46,19 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
             return (IList<T>)await _context.Set<T>().ToListAsync();
         }
         throw new InvalidOperationException("Cannot retrieve ProductTypes from this repository.");
+    }
+
+    private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+    {
+        var query = _context.Set<T>().AsQueryable();
+
+        if (spec.Criteria != null)
+        {
+            query = query.Where(spec.Criteria);
+        }
+
+        query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
+
+        return query;
     }
 }

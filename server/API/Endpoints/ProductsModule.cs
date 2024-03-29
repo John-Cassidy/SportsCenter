@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Repositories;
 using Infrastructure.Data;
+using Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints;
@@ -12,7 +13,9 @@ public static class ProductsModule
         endpoints.MapGet("/products",
             async (IRepository<Product> productRepository) =>
             {
-                var products = await productRepository.GetListAsync(p => p.ProductBrand, p => p.ProductType);
+                // Create a specification
+                var spec = new ProductWithTypesAndBrandSpecification();
+                var products = await productRepository.GetListAsync(spec);
                 return Results.Ok(products);
             })
             .WithName("GetProducts")
@@ -23,7 +26,11 @@ public static class ProductsModule
         endpoints.MapGet("/products/{id}",
             async (IRepository<Product> productRepository, int id) =>
             {
-                var product = await productRepository.GetByIdAsync(id, p => p.ProductBrand, p => p.ProductType);
+                // Create a specification
+                var spec = new ProductWithTypesAndBrandSpecification(id);
+
+                // Use the specification with the repository to get filtered and included results
+                var product = await productRepository.GetByIdAsync(spec);
                 return Results.Ok(product);
             })
             .WithName("GetProductById")

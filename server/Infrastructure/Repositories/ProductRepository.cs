@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
+[Obsolete("This class is obsolete. Use Repository<T> instead.", true)]
 public class ProductRepository : IProductRepository
 {
     // add SportsCenterContext and inject it in the constructor
