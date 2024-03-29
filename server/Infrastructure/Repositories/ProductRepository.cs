@@ -17,7 +17,7 @@ public class ProductRepository : IProductRepository
     }
 
 
-    public async Task<Product> GetProductByIdAsync(int id)
+    public async Task<Product> GetByIdAsync(int id)
     {
         return await _context.Products
             .Include(p => p.ProductBrand)
@@ -26,7 +26,7 @@ public class ProductRepository : IProductRepository
             ?? throw new NotFoundException("Product not found");
     }
 
-    public async Task<IList<Product>> GetProductsAsync()
+    public async Task<IList<Product>> GetListAsync()
     {
         return await _context.Products
             .Include(p => p.ProductBrand)

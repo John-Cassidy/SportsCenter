@@ -20,6 +20,7 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         (int statusCode, string errorMessage) = exception switch
         {
+            InvalidOperationException invalidOperationException => (StatusCodes.Status400BadRequest, invalidOperationException.Message),
             InvalidCastException invalidCastException => (StatusCodes.Status400BadRequest, invalidCastException.Message),
             AggregateException aggregateException => (StatusCodes.Status400BadRequest, aggregateException.Message),
             ArgumentNullException argumentNullException => (StatusCodes.Status400BadRequest, argumentNullException.Message),

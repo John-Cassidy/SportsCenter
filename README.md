@@ -45,3 +45,19 @@ dotnet ef database update -p server/Infrastructure -s server/Api
 ### Option 2: Result Pattern for handling both handled/unhandled expceptions
 
 [Article](https://www.milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern)
+
+## Generic Repository Pattern
+
+A design pattern for abstracting data access logic
+
+- Separate data access from business logic
+- Provides standardized data interaction
+
+Components:
+
+- Repository interface
+- Generic Repository
+- Concrete Repository
+- Abstraction
+- Decoupling
+- Reusability

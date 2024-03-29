@@ -10,9 +10,9 @@ public static class ProductsModule
     public static IEndpointRouteBuilder AddProductsEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/products",
-            async (IProductRepository productRepository) =>
+            async (IRepository<Product> productRepository) =>
             {
-                var products = await productRepository.GetProductsAsync();
+                var products = await productRepository.GetListAsync();
                 return Results.Ok(products);
             })
             .WithName("GetProducts")
@@ -21,9 +21,9 @@ public static class ProductsModule
             .Produces<string>(StatusCodes.Status404NotFound);
 
         endpoints.MapGet("/products/{id}",
-            async (IProductRepository productRepository, int id) =>
+            async (IRepository<Product> productRepository, int id) =>
             {
-                var product = await productRepository.GetProductByIdAsync(id);
+                var product = await productRepository.GetByIdAsync(id);
                 return Results.Ok(product);
             })
             .WithName("GetProductById")
@@ -32,9 +32,9 @@ public static class ProductsModule
             .Produces<string>(StatusCodes.Status404NotFound);
 
         endpoints.MapGet("/brands",
-            async (IProductRepository productRepository) =>
+            async (IRepository<ProductBrand> productBrandRepository) =>
             {
-                var productBrands = await productRepository.GetProductBrandsAsync();
+                var productBrands = await productBrandRepository.GetProductBrandsAsync();
                 return Results.Ok(productBrands);
             })
             .WithName("GetProductBrands")
@@ -43,9 +43,9 @@ public static class ProductsModule
             .Produces<string>(StatusCodes.Status404NotFound);
 
         endpoints.MapGet("/types",
-            async (IProductRepository productRepository) =>
+            async (IRepository<ProductType> productTypeRepository) =>
             {
-                var productTypes = await productRepository.GetProductTypesAsync();
+                var productTypes = await productTypeRepository.GetProductTypesAsync();
                 return Results.Ok(productTypes);
             })
             .WithName("GetProductTypes")

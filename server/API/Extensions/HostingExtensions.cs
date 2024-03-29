@@ -21,6 +21,7 @@ public static class HostingExtensions
         });
 
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
