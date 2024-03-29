@@ -12,7 +12,7 @@ public static class ProductsModule
         endpoints.MapGet("/products",
             async (IRepository<Product> productRepository) =>
             {
-                var products = await productRepository.GetListAsync();
+                var products = await productRepository.GetListAsync(p => p.ProductBrand, p => p.ProductType);
                 return Results.Ok(products);
             })
             .WithName("GetProducts")
@@ -23,7 +23,7 @@ public static class ProductsModule
         endpoints.MapGet("/products/{id}",
             async (IRepository<Product> productRepository, int id) =>
             {
-                var product = await productRepository.GetByIdAsync(id);
+                var product = await productRepository.GetByIdAsync(id, p => p.ProductBrand, p => p.ProductType);
                 return Results.Ok(product);
             })
             .WithName("GetProductById")

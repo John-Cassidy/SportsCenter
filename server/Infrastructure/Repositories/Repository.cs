@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using System.Linq.Expressions;
+using Core.Entities;
 using Core.Exceptions;
 using Core.Repositories;
 using Infrastructure.Data;
@@ -15,25 +16,25 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         _context = context;
     }
 
-    public async Task<IList<T>> GetListAsync()
+    public async Task<IList<T>> GetListAsync(params Expression<Func<T, object>>[] includes)
     {
-        var entity = _context.Set<T>();
-        if (typeof(T) == typeof(Product))
-            entity
-                .Include(p => (p as Product)!.ProductBrand)
-                .Include(p => (p as Product)!.ProductType);
-        return await entity.ToListAsync();
+        IQueryable<T> query = _context.Set<T>();
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+        return await query.ToListAsync();
     }
 
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
     {
-        var entity = _context.Set<T>();
-        if (typeof(T) == typeof(Product))
-            entity
-                .Include(p => (p as Product)!.ProductBrand)
-                .Include(p => (p as Product)!.ProductType);
+        IQueryable<T> query = _context.Set<T>();
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
 
-        return await entity.FirstOrDefaultAsync(p => p.Id == id)
+        return await query.FirstOrDefaultAsync(p => p.Id == id)
             ?? throw new NotFoundException($"{typeof(T).Name} not found.");
     }
 
