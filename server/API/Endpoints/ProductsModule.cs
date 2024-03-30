@@ -1,4 +1,6 @@
-﻿using Core.Entities;
+﻿using API.DTOs;
+using AutoMapper;
+using Core.Entities;
 using Core.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Specifications;
@@ -11,30 +13,36 @@ public static class ProductsModule
     public static IEndpointRouteBuilder AddProductsEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/products",
-            async (IRepository<Product> productRepository) =>
+            async (IMapper mapper, IRepository<Product> productRepository) =>
             {
                 // Create a specification
                 var spec = new ProductWithTypesAndBrandSpecification();
                 var products = await productRepository.GetListAsync(spec);
-                return Results.Ok(products);
+                var productsDto = mapper.Map<IList<Product>, IList<ProductDTO>>(products);
+                return Results.Ok(productsDto);
             })
             .WithName("GetProducts")
-            .Produces<IList<Product>>(StatusCodes.Status200OK)
+            .Produces<IList<ProductDTO>>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
             .Produces<string>(StatusCodes.Status404NotFound);
 
         endpoints.MapGet("/products/{id}",
-            async (IRepository<Product> productRepository, int id) =>
+            async (IMapper mapper, IRepository<Product> productRepository, int id) =>
             {
                 // Create a specification
                 var spec = new ProductWithTypesAndBrandSpecification(id);
 
                 // Use the specification with the repository to get filtered and included results
                 var product = await productRepository.GetByIdAsync(spec);
-                return Results.Ok(product);
+                if (product == null)
+                {
+                    return Results.NotFound($"Product with id {id} not found.");
+                }
+                var productDto = mapper.Map<Product, ProductDTO>(product);
+                return Results.Ok(productDto);
             })
             .WithName("GetProductById")
-            .Produces<Product>(StatusCodes.Status200OK)
+            .Produces<ProductDTO>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
             .Produces<string>(StatusCodes.Status404NotFound);
 

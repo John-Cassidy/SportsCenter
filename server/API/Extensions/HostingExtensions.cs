@@ -1,5 +1,7 @@
 ﻿using API.Endpoints;
 using API.Handlers;
+using API.Profiles;
+using AutoMapper;
 using Core.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
@@ -21,11 +23,13 @@ public static class HostingExtensions
         });
 
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
+        builder.Services.AddIMapper();
 
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddExceptionHandler<GeneralExceptionHandler>();
     }
+
+
 
     public static async Task<WebApplication> ConfigurePipeline(this WebApplication app, ConfigurationManager configuration)
     {
@@ -64,5 +68,21 @@ public static class HostingExtensions
         }
 
         return app;
+    }
+
+    private static void AddIMapper(this IServiceCollection services)
+    {
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.ShouldMapProperty = p => (p.GetMethod?.IsPublic ?? false) || (p.GetMethod?.IsAssembly ?? false);
+            cfg.AddProfile<MappingProfile>();
+        });
+        // only during development, validate your mappings; remove it before release
+#if DEBUG
+        config.AssertConfigurationIsValid();
+#endif
+        // use DI (http://docs.automapper.org/en/latest/Dependency-injection.html) or create the mapper yourself
+        var mapper = config.CreateMapper();
+        services.AddSingleton(mapper);
     }
 }
