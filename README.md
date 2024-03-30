@@ -75,3 +75,11 @@ A specification is typically a predicate (a function that returns a boolean). It
 - `Encapsulation of Domain Knowledge`: The pattern allows you to encapsulate some piece of domain knowledge (a "specification") into a separate class, which can then be reused and combined with other specifications to create complex business rules.
 - `Reuse and Combination`: The power of the Specification Pattern comes from its ability to be combined with other specifications. You can create complex rules by combining simpler ones.
 - `Examples`: For example, you might have a specification that checks if a customer is eligible for a discount. This specification could be used in various parts of your application, such as when calculating the price of an order or when displaying available discounts to the user.
+
+## Searching, Filtering, Sorting, Paging Capabilities
+
+- Filtering
+- Sorting
+- Searching
+- Paging
+- Extending Specifications

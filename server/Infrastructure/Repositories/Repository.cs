@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Core.Entities;
+using Core.Enums;
 using Core.Exceptions;
 using Core.Repositories;
 using Core.Specifications;
@@ -58,6 +59,18 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         }
 
         query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
+
+        if (spec.OrderBy != null)
+        {
+            if (spec.OrderByDirection == OrderBy.Ascending)
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+            else if (spec.OrderByDirection == OrderBy.Descending)
+            {
+                query = query.OrderByDescending(spec.OrderBy);
+            }
+        }
 
         return query;
     }

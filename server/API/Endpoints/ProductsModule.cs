@@ -1,4 +1,5 @@
 ﻿using API.DTOs;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Repositories;
@@ -13,11 +14,23 @@ public static class ProductsModule
     public static IEndpointRouteBuilder AddProductsEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/products",
-            async (IMapper mapper, IRepository<Product> productRepository) =>
+            async (IMapper mapper, IRepository<Product> productRepository, [AsParameters] ProductParams productParams) =>
             {
                 // Create a specification
-                var spec = new ProductWithTypesAndBrandSpecification();
-                var products = await productRepository.GetListAsync(spec);
+                var sort = productParams.Sort ?? string.Empty;
+                var spec = new ProductWithTypesAndBrandSpecification(sort);
+                IList<Product>? products = null;
+
+                try
+                {
+                    products = await productRepository.GetListAsync(spec);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    // Handle the exception here
+                    // Log the error, return an error response, etc.
+                }
                 var productsDto = mapper.Map<IList<Product>, IList<ProductDTO>>(products);
                 return Results.Ok(productsDto);
             })
