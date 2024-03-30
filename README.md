@@ -22,6 +22,14 @@ Where InitialCreate is the name that we will give our migration, you can change 
 
 If everything went well after running the command you will get a message like this: 'Done. To undo this action, use ‘ef migrations remove’'
 
+### Migrations remove command
+
+The migrations remove command is used to remove the created migration if it is not as you wanted.
+
+```powershell
+dotnet ef migrations remove -p server/Infrastructure -s server/Api
+```
+
 ### Update database schema with Migration
 
 To apply any pending migrations to the database, effectively updating the database schema. If no migrations are pending, this command has no effect.
