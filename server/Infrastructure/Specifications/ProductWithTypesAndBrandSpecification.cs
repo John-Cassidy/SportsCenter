@@ -5,7 +5,7 @@ namespace Infrastructure.Specifications;
 
 public class ProductWithTypesAndBrandSpecification : BaseSpecification<Product>
 {
-    public ProductWithTypesAndBrandSpecification(string sort, int? productTypeId = null, int? productBrandId = null)
+    public ProductWithTypesAndBrandSpecification(string sort, int? productTypeId, int? productBrandId, int skip, int take)
     {
         AddInclude(p => p.ProductBrand);
         AddInclude(p => p.ProductType);
@@ -42,6 +42,9 @@ public class ProductWithTypesAndBrandSpecification : BaseSpecification<Product>
                     break;
             }
         }
+
+        if (skip > 0 || take > 0)
+            ApplyPaging(skip, take);
     }
 
     public ProductWithTypesAndBrandSpecification(int id) : base(p => p.Id == id)

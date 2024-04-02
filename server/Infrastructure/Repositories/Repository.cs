@@ -72,6 +72,11 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
             }
         }
 
+        if (spec.IsPagingEnabled)
+        {
+            query = query.Skip(spec.Skip).Take(spec.Take);
+        }
+
         return query;
     }
 }

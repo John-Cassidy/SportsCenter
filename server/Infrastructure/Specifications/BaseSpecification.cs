@@ -9,6 +9,10 @@ public abstract class BaseSpecification<T> : ISpecification<T>
     public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
     public Expression<Func<T, object>> OrderBy { get; private set; } = null;
     public Core.Enums.OrderBy OrderByDirection { get; private set; }
+    public int Skip { get; private set; } = 0;
+    public int Take { get; private set; } = -1;
+    public bool IsPagingEnabled { get; private set; } = false;
+
 
     protected void AddInclude(Expression<Func<T, object>> includeExpression)
     {
@@ -24,6 +28,13 @@ public abstract class BaseSpecification<T> : ISpecification<T>
     {
         OrderBy = orderBy;
         OrderByDirection = direction;
+    }
+
+    protected void ApplyPaging(int skip, int take)
+    {
+        Skip = skip;
+        Take = take;
+        IsPagingEnabled = true;
     }
 
     protected BaseSpecification(

@@ -20,7 +20,10 @@ public static class ProductsModule
                 var sort = productParams.Sort ?? string.Empty;
                 var productTypeId = productParams.ProductTypeId;
                 var productBrandId = productParams.ProductBrandId;
-                var spec = new ProductWithTypesAndBrandSpecification(sort, productTypeId, productBrandId);
+                var skip = productParams.Skip ?? 0;
+                var take = productParams.Take ?? 10;
+
+                var spec = new ProductWithTypesAndBrandSpecification(sort, productTypeId, productBrandId, skip, take);
                 IList<Product>? products = null;
 
                 try
