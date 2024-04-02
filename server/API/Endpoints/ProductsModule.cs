@@ -18,7 +18,9 @@ public static class ProductsModule
             {
                 // Create a specification
                 var sort = productParams.Sort ?? string.Empty;
-                var spec = new ProductWithTypesAndBrandSpecification(sort);
+                var productTypeId = productParams.ProductTypeId;
+                var productBrandId = productParams.ProductBrandId;
+                var spec = new ProductWithTypesAndBrandSpecification(sort, productTypeId, productBrandId);
                 IList<Product>? products = null;
 
                 try
