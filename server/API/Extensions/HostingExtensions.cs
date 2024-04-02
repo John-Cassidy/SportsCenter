@@ -25,6 +25,8 @@ public static class HostingExtensions
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddIMapper();
 
+        builder.Services.AddCors();
+
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddExceptionHandler<GeneralExceptionHandler>();
     }
@@ -43,6 +45,13 @@ public static class HostingExtensions
         {
             app.UseHttpsRedirection();
         }
+
+        app.UseCors(policy =>
+            policy
+                .WithOrigins(configuration["Cors:ClientAddress"])
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+        );
 
         app.UseExceptionHandler(_ => { });
 
