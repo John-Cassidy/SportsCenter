@@ -22,8 +22,9 @@ public static class ProductsModule
                 var productBrandId = productParams.ProductBrandId;
                 var skip = productParams.Skip ?? 0;
                 var take = productParams.Take ?? 10;
+                var search = productParams.Search;
 
-                var spec = new ProductWithTypesAndBrandSpecification(sort, productTypeId, productBrandId, skip, take);
+                var spec = new ProductWithTypesAndBrandSpecification(sort, productTypeId, productBrandId, skip, take, search);
                 IList<Product>? products = null;
 
                 try

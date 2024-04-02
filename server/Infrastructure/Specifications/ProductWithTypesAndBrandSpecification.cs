@@ -5,7 +5,7 @@ namespace Infrastructure.Specifications;
 
 public class ProductWithTypesAndBrandSpecification : BaseSpecification<Product>
 {
-    public ProductWithTypesAndBrandSpecification(string sort, int? productTypeId, int? productBrandId, int skip, int take)
+    public ProductWithTypesAndBrandSpecification(string sort, int? productTypeId, int? productBrandId, int skip, int take, string? search = null)
     {
         AddInclude(p => p.ProductBrand);
         AddInclude(p => p.ProductType);
@@ -45,6 +45,11 @@ public class ProductWithTypesAndBrandSpecification : BaseSpecification<Product>
 
         if (skip > 0 || take > 0)
             ApplyPaging(skip, take);
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            ApplyCriteria(p => p.Name.ToLower().Contains(search.ToLower()));
+        }
     }
 
     public ProductWithTypesAndBrandSpecification(int id) : base(p => p.Id == id)
