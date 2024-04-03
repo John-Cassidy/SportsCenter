@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome http localhost",
+      "url": "http://localhost:4200",
+      "preLaunchTask": "npm: start",
+      "webRoot": "${workspaceFolder}/client"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome https localhost",
+      "url": "https://localhost:4201",
+      "preLaunchTask": "npm: start",
+      "webRoot": "${workspaceFolder}/client"
+    }
+  ]
+}

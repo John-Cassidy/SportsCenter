@@ -91,3 +91,40 @@ A specification is typically a predicate (a function that returns a boolean). It
 - Searching
 - Paging
 - Extending Specifications
+
+## Client Application with Angular
+
+```powershell
+npx @angular/cli new client --routing --dry-run
+Need to install the following packages:
+@angular/cli@17.3.3
+Ok to proceed? (y) y
+? Which stylesheet format would you like to use? Sass (SCSS)     [
+https://sass-lang.com/documentation/syntax#scss                ]
+? Do you want to enable Server-Side Rendering (SSR) and Static Site Generation (SSG/Prerendering)? No
+CREATE client/angular.json (2867 bytes)
+CREATE client/package.json (1075 bytes)
+CREATE client/README.md (1087 bytes)
+CREATE client/tsconfig.json (889 bytes)
+CREATE client/.editorconfig (290 bytes)
+CREATE client/.gitignore (590 bytes)
+CREATE client/tsconfig.app.json (277 bytes)
+CREATE client/tsconfig.spec.json (287 bytes)
+CREATE client/.vscode/extensions.json (134 bytes)
+CREATE client/.vscode/launch.json (490 bytes)
+CREATE client/.vscode/tasks.json (980 bytes)
+CREATE client/src/main.ts (256 bytes)
+CREATE client/src/favicon.ico (15086 bytes)
+CREATE client/src/index.html (305 bytes)
+CREATE client/src/styles.scss (81 bytes)
+CREATE client/src/app/app.component.html (20239 bytes)
+CREATE client/src/app/app.component.spec.ts (945 bytes)
+CREATE client/src/app/app.component.ts (316 bytes)
+CREATE client/src/app/app.component.scss (0 bytes)
+CREATE client/src/app/app.config.ts (235 bytes)
+CREATE client/src/app/app.routes.ts (80 bytes)
+CREATE client/src/assets/.gitkeep (0 bytes)
+
+NOTE: The "--dry-run" option means no changes were made.
+✔ Without "--dry-run" Packages installed successfully.
+```
