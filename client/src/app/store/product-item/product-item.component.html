@@ -8,12 +8,12 @@
     />
     <div class="card-body">
       <h5 class="card-title">{{ product.name }}</h5>
-      <p class="card-text">Price: {{ product.price | currency : 'INR' }}</p>
+      <p class="card-text">Price: {{ product.price | currency : 'USD' }}</p>
 
       <!-- Buttons -->
       <div class="btn-group mt-auto">
         <button
-          class="btn btn-primary me-2"
+          class="btn btn-primary fa fa-eye me-2"
           routerLink="/store/{{ product.id }}"
         >
           View
