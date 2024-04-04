@@ -1,6 +1,6 @@
 # Client
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.3.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
 
 ## Code scaffolding
 
@@ -8,8 +8,12 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Commands
 
+- [Angular.dev](https://angular.dev/)
+
 - [Angular CLI Cheat Sheet 1](https://www.digitalocean.com/community/tutorials/angular-angular-cli-reference)
+
 - [Angular CLI Cheat Sheet 2](https://pankaj-kumar.medium.com/angular-cli-cheat-sheet-the-cli-command-an-angular-developer-should-know-42fad81992c9)
+
 - [Angular CLI Cheat Sheet 3](https://malcoded.com/posts/angular-fundamentals-cli/#cheat-sheet)
 
 ```powershell
@@ -107,27 +111,56 @@ export const appConfig: ApplicationConfig = {
 
 [How to use Shared Elements without using a Module](https://medium.com/@zayani.zied/angular-application-based-on-standalone-components-with-lazy-loading-and-shared-elements-417f36682968)
 
-### Option 2 CoreModule SharedModule StoreModule
+CoreComponent SharedComponent StoreComponent can be created for applications using Standalone components.
 
-A Shared module enables the centralization and organization of common directives, pipes, and components into a single module, which can be imported as needed in other sections of the application.
+### create CoreComponent and NavBar component Instructions
 
-Create CoreModule and SharedModule in app folder.
+Create folder: ~/app/core/
+
+Create index.ts (Barrel) file
 
 ```powershell
-npx ng g m core --dry-run
-CREATE src/app/core/core.module.ts (202 bytes)
-
-npx ng g m shared --dry-run
-CREATE src/app/core/shared.module.ts (202 bytes)
+New-Item -Path . -Name "index.ts" -ItemType "file"
 ```
 
-### Option 1 CoreComponent SharedComponent StoreComponent
+```ts
+// Add CoreComponent to index.ts file
+export const CoreComponent = [];
+```
 
-Alternatively, CoreComponent SharedComponent StoreComponent can be created to do the same for applications using Standalone components.
+```ts
+// Add CoreComponent to app.component.ts file
+import { Component } from '@angular/core';
+import { CoreComponent } from './core';
+import { RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, CoreComponent],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
+})
+export class AppComponent {
+  title = 'client';
+}
+```
+
+#### NavBar
+
+```powershell
+# Create NavBar component in core folder
+npx ng g c core/navBar --skip-tests=true --dry-run
+```
+
+```ts
+// Add NavBar to CoreComponent to index.ts file
+export const CoreComponent = [];
+```
 
 ### create SharedComponent Instructions
 
-NOTE: Do same for CoreComponent and StoreComponent
+NOTE: Do same for StoreComponent
 
 Create folders:
 

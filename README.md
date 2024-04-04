@@ -131,14 +131,14 @@ NOTE: The "--dry-run" option means no changes were made.
 ✔ Without "--dry-run" Packages installed successfully.
 ```
 
-### Commands
+#### Commands
 
 Angular Project Commands from client folder
 (See README in client folder for more detailed list)
 
-### Install Packages
+#### Install Packages
 
-#### ngx-bootstrap
+##### ngx-bootstrap
 
 [GitHub Repo](https://github.com/valor-software/ngx-bootstrap)
 
