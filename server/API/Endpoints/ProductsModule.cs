@@ -27,21 +27,22 @@ public static class ProductsModule
                 var spec = new ProductWithTypesAndBrandSpecification(sort, productTypeId, productBrandId, skip, take, search);
                 IList<Product>? products = null;
 
-                try
+                var countSpec = new ProductCountSpecification(productTypeId, productBrandId, search);
+                var totalCount = await productRepository.CountAsync(countSpec);
+
+                if (totalCount == 0)
                 {
-                    products = await productRepository.GetListAsync(spec);
+                    return Results.Ok(new Pagination<ProductDTO>(skip, take, 0, new List<ProductDTO>()));
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    // Handle the exception here
-                    // Log the error, return an error response, etc.
-                }
+
+                products = await productRepository.GetListAsync(spec);
+
                 var productsDto = mapper.Map<IList<Product>, IList<ProductDTO>>(products);
-                return Results.Ok(productsDto);
+                var pagination = new Pagination<ProductDTO>(skip, take, totalCount, productsDto.ToList());
+                return Results.Ok(pagination);
             })
             .WithName("GetProducts")
-            .Produces<IList<ProductDTO>>(StatusCodes.Status200OK)
+            .Produces<Pagination<ProductDTO>>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
             .Produces<string>(StatusCodes.Status404NotFound);
 

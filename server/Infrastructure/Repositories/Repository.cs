@@ -49,6 +49,12 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         throw new InvalidOperationException("Cannot retrieve ProductTypes from this repository.");
     }
 
+    public async Task<int> CountAsync(ISpecification<T> spec)
+    {
+        IQueryable<T> query = ApplySpecification(spec);
+        return await query.CountAsync();
+    }
+
     private IQueryable<T> ApplySpecification(ISpecification<T> spec)
     {
         var query = _context.Set<T>().AsQueryable();

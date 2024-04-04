@@ -10,4 +10,5 @@ public interface IRepository<T> where T : BaseEntity
     Task<IList<T>> GetListAsync(ISpecification<T> spec);
     Task<IList<T>> GetProductBrandsAsync();
     Task<IList<T>> GetProductTypesAsync();
+    Task<int> CountAsync(ISpecification<T> spec);
 }
