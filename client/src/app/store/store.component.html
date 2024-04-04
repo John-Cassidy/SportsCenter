@@ -1,17 +1,82 @@
 <div class="container mt-5">
   <div class="row">
-    <div class="col-md-4" *ngFor="let product of products.data">
-      <div class="card mb-4">
-        <img
-          class="card-img-top"
-          [src]="'assets/' + product.pictureUrl"
-          alt="{{ product.name }}"
-          style="height: 100px; object-fit: contain"
-        />
-        <div class="card-body">
-          <h5 class="card-title">{{ product.name }}</h5>
-          <p class="card-text">{{ product.description }}</p>
-          <a href="#" class="btn btn-primary">Buy for {{ product.price }}</a>
+    <!-- Sidebar for filters -->
+    <div class="col-md-3">
+      <h5 class="text-primary ml-3 mt-4 mb-3">Brands</h5>
+      <ul class="list-group my-3">
+        <li
+          class="list-group-item"
+          *ngFor="let brand of brands; let i = index"
+          [class.active]="brand.id === params.productBrandId"
+          [value]="brand.id"
+          (click)="selectBrand(brand.id)"
+        >
+          {{ brand.name }}
+        </li>
+      </ul>
+      <h5 class="text-primary ml-3">Types</h5>
+      <ul class="list-group my-3">
+        <li
+          class="list-group-item"
+          *ngFor="let type of types; let i = index"
+          [class.active]="type.id === params.productTypeId"
+          [value]="type.id"
+          (click)="selectType(type.id)"
+        >
+          {{ type.name }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Products -->
+    <div class="col-md-9">
+      <div class="container">
+        <!-- NGX-Bootstrap Pagination -->
+        <div class="d-flex justify-content-center" *ngIf="totalCount > 0">
+          <pagination
+            [boundaryLinks]="true"
+            [totalItems]="products.totalItems"
+            [itemsPerPage]="products.pageSize"
+            (pageChanged)="onPageChanged($event)"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;"
+          ></pagination>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4" *ngFor="let product of products.data">
+            <div class="card mb-4">
+              <img
+                class="card-img-top"
+                [src]="'assets/' + product.pictureUrl"
+                alt="{{ product.name }}"
+                style="height: 100px; object-fit: contain"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description }}</p>
+                <a href="#" class="btn btn-primary"
+                  >Buy for {{ product.price }}</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NGX-Bootstrap Pagination -->
+        <div class="d-flex justify-content-center" *ngIf="totalCount > 0">
+          <pagination
+            [boundaryLinks]="true"
+            [totalItems]="products.totalItems"
+            [itemsPerPage]="products.pageSize"
+            (pageChanged)="onPageChanged($event)"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;"
+          ></pagination>
         </div>
       </div>
     </div>

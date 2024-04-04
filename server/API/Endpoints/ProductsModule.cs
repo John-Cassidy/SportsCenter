@@ -62,7 +62,7 @@ public static class ProductsModule
             .Produces<string>(StatusCodes.Status400BadRequest)
             .Produces<string>(StatusCodes.Status404NotFound);
 
-        endpoints.MapGet("/brands",
+        endpoints.MapGet("/products/brands",
             async (IRepository<ProductBrand> productBrandRepository) =>
             {
                 var productBrands = await productBrandRepository.GetProductBrandsAsync();
@@ -73,7 +73,7 @@ public static class ProductsModule
             .Produces<string>(StatusCodes.Status400BadRequest)
             .Produces<string>(StatusCodes.Status404NotFound);
 
-        endpoints.MapGet("/types",
+        endpoints.MapGet("/products/types",
             async (IRepository<ProductType> productTypeRepository) =>
             {
                 var productTypes = await productTypeRepository.GetProductTypesAsync();
