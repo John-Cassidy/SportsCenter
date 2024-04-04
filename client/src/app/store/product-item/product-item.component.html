@@ -1,0 +1,25 @@
+<div class="card h-100 shadow-sm" *ngIf="product">
+  <div class="image position-relative;" style="cursor: pointer">
+    <img
+      class="card-img-top"
+      [src]="'assets/' + product.pictureUrl"
+      alt="{{ product.name }}"
+      class="img-fluid bg-light"
+    />
+    <div class="card-body">
+      <h5 class="card-title">{{ product.name }}</h5>
+      <p class="card-text">Price: {{ product.price | currency : 'INR' }}</p>
+
+      <!-- Buttons -->
+      <div class="btn-group mt-auto">
+        <button
+          class="btn btn-primary me-2"
+          routerLink="/store/{{ product.id }}"
+        >
+          View
+        </button>
+        <button class="btn btn-success fa fa-shopping-cart"></button>
+      </div>
+    </div>
+  </div>
+</div>

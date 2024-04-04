@@ -46,22 +46,8 @@
         </div>
 
         <div class="row">
-          <div class="col-md-4" *ngFor="let product of products.data">
-            <div class="card mb-4">
-              <img
-                class="card-img-top"
-                [src]="'assets/' + product.pictureUrl"
-                alt="{{ product.name }}"
-                style="height: 100px; object-fit: contain"
-              />
-              <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text">{{ product.description }}</p>
-                <a href="#" class="btn btn-primary"
-                  >Buy for {{ product.price }}</a
-                >
-              </div>
-            </div>
+          <div class="col-md-4 mb-4" *ngFor="let product of products.data">
+            <app-product-item [product]="product"></app-product-item>
           </div>
         </div>
 

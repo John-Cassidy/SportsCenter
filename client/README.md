@@ -246,8 +246,8 @@ npx ng g s store/store --flat --skip-tests --dry-run
 #create store/store.routes.ts
 New-Item -Path ./src/app/store -Name "store.routes.ts" -ItemType "file"
 
-#
-npx ng g c store/product-items --skip-tests --dry-run
+# create store/product-item component
+npx ng g c store/product-item --standalone --skip-tests --dry-run
 ```
 
 ## NGX-Bootstrap Pagination

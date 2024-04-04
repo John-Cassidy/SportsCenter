@@ -6,6 +6,7 @@ import { Pagination } from '../shared/models/Pagination';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { Product } from '../shared/models/Product';
 import { ProductBrand } from '../shared/models/ProductBrand';
+import { ProductItemComponent } from './product-item/product-item.component';
 import { ProductType } from '../shared/models/ProductType';
 import { SharedComponent } from '../shared';
 import { StoreParams } from '../shared/models/storeParams';
@@ -14,7 +15,13 @@ import { StoreService } from './store.service';
 @Component({
   selector: 'app-store',
   standalone: true,
-  imports: [CommonModule, CoreComponent, SharedComponent, PaginationModule],
+  imports: [
+    CommonModule,
+    CoreComponent,
+    SharedComponent,
+    PaginationModule,
+    ProductItemComponent,
+  ],
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss',
 })
