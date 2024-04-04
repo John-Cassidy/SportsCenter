@@ -24,19 +24,15 @@ public static class ProductsModule
                 var take = productParams.Take ?? 10;
                 var search = productParams.Search;
 
-                var spec = new ProductWithTypesAndBrandSpecification(sort, productTypeId, productBrandId, skip, take, search);
-                IList<Product>? products = null;
-
                 var countSpec = new ProductCountSpecification(productTypeId, productBrandId, search);
                 var totalCount = await productRepository.CountAsync(countSpec);
-
                 if (totalCount == 0)
                 {
                     return Results.Ok(new Pagination<ProductDTO>(skip, take, 0, new List<ProductDTO>()));
                 }
 
-                products = await productRepository.GetListAsync(spec);
-
+                var spec = new ProductWithTypesAndBrandSpecification(sort, productTypeId, productBrandId, skip, take, search);
+                var products = await productRepository.GetListAsync(spec);
                 var productsDto = mapper.Map<IList<Product>, IList<ProductDTO>>(products);
                 var pagination = new Pagination<ProductDTO>(skip, take, totalCount, productsDto.ToList());
                 return Results.Ok(pagination);
