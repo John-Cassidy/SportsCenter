@@ -11,6 +11,4 @@ import { SharedComponent } from './shared';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'Sports Center';
-}
+export class AppComponent {}
