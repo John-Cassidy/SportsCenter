@@ -36,6 +36,12 @@ export class StoreComponent implements OnInit {
   types: ProductType[] = [];
   params: StoreParams = new StoreParams();
   totalCount = 0;
+  sortOptions = [
+    { name: 'Name Ascending', value: 'NameAsc' },
+    { name: 'Name Descending', value: 'NameDesc' },
+    { name: 'Price Low to High', value: 'PriceAsc' },
+    { name: 'Price High to Low', value: 'PriceDesc' },
+  ];
 
   constructor(private storeService: StoreService) {}
 
@@ -77,6 +83,11 @@ export class StoreComponent implements OnInit {
   onPageChanged(event: any) {
     this.params.skip = (event.page - 1) * this.products.pageSize;
 
+    this.getProducts();
+  }
+
+  onSortChange(sort: string) {
+    this.params.sort = sort;
     this.getProducts();
   }
 }

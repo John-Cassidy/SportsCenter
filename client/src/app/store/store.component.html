@@ -2,7 +2,16 @@
   <div class="row">
     <!-- Sidebar for filters -->
     <div class="col-md-3">
-      <h5 class="text-primary ml-3 mt-4 mb-3">Brands</h5>
+      <h5 class="text-warning mb-3">Sort</h5>
+      <select
+        class="custom-select mb-4"
+        (change)="onSortChange($any($event.target).value)"
+      >
+        <option *ngFor="let sort of sortOptions" [value]="sort.value">
+          {{ sort.name }}
+        </option>
+      </select>
+      <h5 class="text-warning ml-3 mt-4 mb-3">Brands</h5>
       <ul class="list-group my-3">
         <li
           class="list-group-item"
@@ -14,7 +23,7 @@
           {{ brand.name }}
         </li>
       </ul>
-      <h5 class="text-primary ml-3">Types</h5>
+      <h5 class="text-warning ml-3">Types</h5>
       <ul class="list-group my-3">
         <li
           class="list-group-item"
