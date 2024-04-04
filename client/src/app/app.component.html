@@ -1,28 +1,10 @@
 <div>
   <app-nav-bar></app-nav-bar>
-  <div class="container mt-5">
-    <div class="jumbotron">
-      <h1 class="display-4">Welcome to {{ title }}!</h1>
-      <p class="lead">Your one-stop destination for all your shopping needs.</p>
-      <hr class="my-4" />
-      <a class="btn btn-primary btn-lg" href="#" role="button">Shop</a>
-    </div>
-    <div class="row">
-      <div class="col-md-4" *ngFor="let product of products.data">
-        <div class="card mb-4">
-          <img
-            class="card-img-top"
-            [src]="'assets/' + product.pictureUrl"
-            alt="{{ product.name }}"
-            style="height: 100px; object-fit: contain"
-          />
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text">{{ product.description }}</p>
-            <a href="#" class="btn btn-primary">Buy for {{ product.price }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="jumbotron">
+    <h1 class="display-4">Welcome to {{ title }}!</h1>
+    <p class="lead">Your one-stop destination for all your shopping needs.</p>
+    <hr class="my-4" />
+    <a class="btn btn-primary btn-lg" href="#" role="button">Shop</a>
   </div>
+  <router-outlet></router-outlet>
 </div>
