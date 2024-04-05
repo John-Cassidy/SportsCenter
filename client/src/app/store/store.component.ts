@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { CoreComponent } from '../core';
 import { Pagination } from '../shared/models/Pagination';
+import { PaginationHeaderComponent } from '../shared/components/pagination-header/pagination-header.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { Product } from '../shared/models/Product';
 import { ProductBrand } from '../shared/models/ProductBrand';
@@ -21,11 +22,13 @@ import { StoreService } from './store.service';
     SharedComponent,
     PaginationModule,
     ProductItemComponent,
+    PaginationHeaderComponent,
   ],
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss',
 })
 export class StoreComponent implements OnInit {
+  @ViewChild('search') searchTerm?: ElementRef;
   products: Pagination<Product> = {
     pageIndex: 0,
     pageSize: 0,
@@ -35,7 +38,7 @@ export class StoreComponent implements OnInit {
   brands: ProductBrand[] = [];
   types: ProductType[] = [];
   params: StoreParams = new StoreParams();
-  totalCount = 0;
+  pageNumber = 1;
   sortOptions = [
     { name: 'Name Ascending', value: 'NameAsc' },
     { name: 'Name Descending', value: 'NameDesc' },
@@ -66,7 +69,10 @@ export class StoreComponent implements OnInit {
   private getProducts() {
     this.storeService.getProducts(this.params).subscribe((response) => {
       this.products = response;
-      this.totalCount = response.totalItems;
+      this.pageNumber =
+        response.pageIndex >= response.pageSize
+          ? response.pageIndex / response.pageSize + 1
+          : 1;
     });
   }
 
@@ -77,6 +83,27 @@ export class StoreComponent implements OnInit {
 
   selectType(typeId: number) {
     this.params.productTypeId = typeId;
+    this.getProducts();
+  }
+
+  onSearch() {
+    this.params.search = this.searchTerm?.nativeElement.value;
+    this.params.skip = 0;
+    this.getProducts();
+  }
+
+  onReset() {
+    // Reset the search params and fetch the original list of products
+    if (this.searchTerm) {
+      this.searchTerm.nativeElement.value = '';
+    }
+    this.params.skip = 0;
+    this.params.take = 10;
+    this.params.sort = 'NameAsc';
+    this.params.productBrandId = 0;
+    this.params.productTypeId = 0;
+    this.params.search = '';
+    this.pageNumber = 1;
     this.getProducts();
   }
 

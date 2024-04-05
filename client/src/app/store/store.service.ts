@@ -33,6 +33,10 @@ export class StoreService {
       params = params.set('productTypeId', httpParams.productTypeId.toString());
     }
 
+    if (httpParams.search) {
+      params = params.set('search', httpParams.search); // Add the search parameter to the query
+    }
+
     return this.http.get<Pagination<Product>>(this.apiUrl, {
       params,
     });
