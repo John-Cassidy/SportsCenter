@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
 import { CoreComponent } from '../core';
 import { Pagination } from '../shared/models/Pagination';
 import { PaginationHeaderComponent } from '../shared/components/pagination-header/pagination-header.component';
@@ -17,7 +16,6 @@ import { StoreService } from './store.service';
   selector: 'app-store',
   standalone: true,
   imports: [
-    CommonModule,
     CoreComponent,
     SharedComponent,
     PaginationModule,
@@ -55,24 +53,29 @@ export class StoreComponent implements OnInit {
   }
 
   private getBrands() {
-    this.storeService.getBrands().subscribe((response) => {
-      this.brands = response;
+    this.storeService.getBrands().subscribe({
+      next: (response) => (this.brands = [{ id: 0, name: 'All' }, ...response]),
+      error: (error) => console.log(error),
     });
   }
 
   private getTypes() {
-    this.storeService.getTypes().subscribe((response) => {
-      this.types = response;
+    this.storeService.getTypes().subscribe({
+      next: (response) => (this.types = [{ id: 0, name: 'All' }, ...response]),
+      error: (error) => console.log(error),
     });
   }
 
   private getProducts() {
-    this.storeService.getProducts(this.params).subscribe((response) => {
-      this.products = response;
-      this.pageNumber =
-        response.pageIndex >= response.pageSize
-          ? response.pageIndex / response.pageSize + 1
-          : 1;
+    this.storeService.getProducts(this.params).subscribe({
+      next: (response) => {
+        this.products = response;
+        this.pageNumber =
+          response.pageIndex >= response.pageSize
+            ? response.pageIndex / response.pageSize + 1
+            : 1;
+      },
+      error: (error) => console.log(error),
     });
   }
 
@@ -89,6 +92,8 @@ export class StoreComponent implements OnInit {
   onSearch() {
     this.params.search = this.searchTerm?.nativeElement.value;
     this.params.skip = 0;
+    this.params.productBrandId = 0;
+    this.params.productTypeId = 0;
     this.getProducts();
   }
 
