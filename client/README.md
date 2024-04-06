@@ -263,6 +263,8 @@ npx ng g c home --standalone --skip-tests=true --dry-run
 
 npx ng g c shared/components/pagination-header --standalone --skip-tests=true --dry-run
 
+npx ng g c shared/components/pagination --standalone --skip-tests=true --dry-run
+
 npx ng g c store/product-details --standalone --skip-tests=true --dry-run
 ```
 

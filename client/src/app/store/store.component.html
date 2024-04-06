@@ -65,15 +65,7 @@
           ></app-pagination-header>
         </div>
 
-        <!-- Search and Reset filters -->
         <div class="d-flex mt-2">
-          <!-- <input
-            class="form-control me-2"
-            style="width: 200px"
-            placeholder="Search"
-            type="text"
-            [(ngModel)]="params.search"
-          /> -->
           <input
             (keyup.enter)="onSearch()"
             class="form-control me-2"
