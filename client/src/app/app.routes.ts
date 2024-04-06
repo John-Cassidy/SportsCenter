@@ -8,4 +8,5 @@ export const APP_ROUTES: Routes = [
     loadChildren: () =>
       import('./store/store.routes').then((m) => m.STORE_ROUTES),
   },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
