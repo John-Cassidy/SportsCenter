@@ -282,14 +282,16 @@ npx ng g interceptor core/interceptors/error --functional --skip-tests --dry-run
 # - export class ErrorInterceptor implements HttpInterceptor
 npx ng g interceptor core/interceptors/error --functional=false --skip-tests --dry-run
 
-npx ng g c core/not-found --skip-tests --dry-run
+npx ng g c core/not-found --standalone --skip-tests --dry-run
 npx ng g c core/unauthenticated --skip-tests --dry-run
-npx ng g c core/server-error --skip-tests --dry-run
+npx ng g c core/server-error --standalone --skip-tests --dry-run
 ```
 
 ## UI Components
 
 ```powershell
+# ToastR component
+npm i ngx-toastr
 # Header Component
 npx ng g c core/header --skip-tests --dry-run
 
