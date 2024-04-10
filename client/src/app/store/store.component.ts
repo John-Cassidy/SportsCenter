@@ -11,6 +11,7 @@ import { ProductType } from '../shared/models/ProductType';
 import { SharedComponent } from '../shared';
 import { StoreParams } from '../shared/models/storeParams';
 import { StoreService } from './store.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-store',
@@ -44,7 +45,10 @@ export class StoreComponent implements OnInit {
     { name: 'Price High to Low', value: 'PriceDesc' },
   ];
 
-  constructor(private storeService: StoreService) {}
+  constructor(
+    private storeService: StoreService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.getBrands();
@@ -74,6 +78,7 @@ export class StoreComponent implements OnInit {
           response.pageIndex >= response.pageSize
             ? response.pageIndex / response.pageSize + 1
             : 1;
+        this.toastr.success('Products returned successfully', 'Success');
       },
       error: (error) => console.log(error),
     });

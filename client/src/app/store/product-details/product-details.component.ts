@@ -5,6 +5,7 @@ import { CoreComponent } from '../../core';
 import { Product } from '../../shared/models/Product';
 import { SharedComponent } from '../../shared';
 import { StoreService } from '../store.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-product-details',
@@ -19,7 +20,8 @@ export class ProductDetailsComponent implements OnInit {
 
   constructor(
     private storeService: StoreService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
