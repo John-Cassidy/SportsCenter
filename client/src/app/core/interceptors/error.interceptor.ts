@@ -27,6 +27,10 @@ export const errorInterceptor: HttpInterceptorFn = (
         if (error.status >= 500) {
           toastr.error('Server error', '500 Error');
           router.navigateByUrl('/server-error');
+        } else if (error.status === 0) {
+          // Handle connection refused or no network error
+          toastr.error('Connection error!', 'Error'); // Display error message using Toastr
+          router.navigate(['/connection-refused']);
         }
       }
       return throwError(() => new Error(error));

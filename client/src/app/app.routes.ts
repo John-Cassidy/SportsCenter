@@ -1,3 +1,4 @@
+import { ConnectionRefusedComponent } from './core/connection-refused/connection-refused.component';
 import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './core/not-found/not-found.component';
 import { Routes } from '@angular/router';
@@ -15,11 +16,11 @@ export const APP_ROUTES: Routes = [
     component: ServerErrorComponent,
     data: { breadcrumb: 'Server Error' },
   },
-  // {
-  //   path: 'connection-refused',
-  //   component: ConnectionRefusedComponent,
-  //   data: { breadcrumb: 'Connection Refused' },
-  // },
+  {
+    path: 'connection-refused',
+    component: ConnectionRefusedComponent,
+    data: { breadcrumb: 'Connection Refused' },
+  },
   {
     path: 'store',
     loadChildren: () =>

@@ -1,3 +1,4 @@
+import { ConnectionRefusedComponent } from './connection-refused/connection-refused.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { SectionHeaderComponent } from './section-header/section-header.component';
@@ -8,4 +9,5 @@ export const CoreComponent = [
   NotFoundComponent,
   ServerErrorComponent,
   SectionHeaderComponent,
+  ConnectionRefusedComponent,
 ];

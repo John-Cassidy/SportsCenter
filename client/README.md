@@ -285,6 +285,7 @@ npx ng g interceptor core/interceptors/error --functional=false --skip-tests --d
 npx ng g c core/not-found --standalone --skip-tests --dry-run
 npx ng g c core/unauthenticated --skip-tests --dry-run
 npx ng g c core/server-error --standalone --skip-tests --dry-run
+npx ng g c core/connection-refused --standalone --skip-tests --dry-run
 ```
 
 ## UI Components
