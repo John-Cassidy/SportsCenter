@@ -289,13 +289,19 @@ npx ng g c core/server-error --standalone --skip-tests --dry-run
 
 ## UI Components
 
+[xng-breadcrumb](https://github.com/udayvunnam/xng-breadcrumb)
+
+[Quick start xng-breadcrumb](https://udayvunnam.github.io/xng-breadcrumb/#/quickstart?id=angular-lt-17-breadcrumbmodule)
+
+[Angular 17 functional HTTP interceptors](https://blog.herodevs.com/angular-15-introduces-functional-http-interceptors-59299cce60bf)
+
 ```powershell
 # ToastR component
 # https://www.npmjs.com/package/ngx-toastr
 npm i ngx-toastr
 
-# Header Component
-npx ng g c core/header --skip-tests --dry-run
+# Section Header Component
+npx ng g c core/section-header --standalone --skip-tests --dry-run
 
 # install xng-breadcrumb package
 npm i xng-breadcrumb --legacy-peer-deps
@@ -313,9 +319,9 @@ npx ng g s core/services/loading --skip-tests --dry-run
 
 ## NGX-Bootstrap Carousel
 
-[Documentation](https://valor-software.com/ngx-bootstrap/#/components/pagination?tab=overview)
+[Documentation](https://valor-software.com/ngx-bootstrap/#/components/carousel?tab=overview)
 
-NOTE: since this project uses standalone components, import module into store component and add importProvidersFrom(CarouselModule.forRoot()) to app.config.ts. In addition, you need to import CarouselModule into the standalone component where it will be used.
+NOTE: since this project uses standalone components, add importProvidersFrom(CarouselModule.forRoot()) to app.config.ts. In addition, you need to import CarouselModule into the standalone component where it will be used.
 
 ## Basket
 
