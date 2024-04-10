@@ -291,7 +291,9 @@ npx ng g c core/server-error --standalone --skip-tests --dry-run
 
 ```powershell
 # ToastR component
+# https://www.npmjs.com/package/ngx-toastr
 npm i ngx-toastr
+
 # Header Component
 npx ng g c core/header --skip-tests --dry-run
 
