@@ -305,7 +305,7 @@ npm i ngx-toastr
 npx ng g c core/section-header --standalone --skip-tests --dry-run
 
 # install xng-breadcrumb package
-npm i xng-breadcrumb --legacy-peer-deps
+npm i xng-breadcrumb
 
 # install ngx-spinner
 npm i ngx-spinner --legacy-peer-deps
