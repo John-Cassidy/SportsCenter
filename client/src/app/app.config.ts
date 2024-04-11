@@ -3,6 +3,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter, withHashLocation } from '@angular/router';
 
 import { APP_ROUTES } from './app.routes';
+import { CarouselModule } from 'ngx-bootstrap/carousel'; // Import the CarouselModule from the correct module
 import { LoadingService } from './core/services/loading.service';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
@@ -20,6 +21,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(), // required animations providers
     provideToastr({ timeOut: 2000, positionClass: 'toast-bottom-right' }), // Toastr providers
-    importProvidersFrom(PaginationModule.forRoot()),
+    importProvidersFrom(PaginationModule.forRoot(), CarouselModule.forRoot()),
   ],
 };
