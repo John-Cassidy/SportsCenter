@@ -180,3 +180,20 @@ Update angular.json: projects > client > architect > options > styles:
 #### Other Considerations
 
 [How to Setup ESLint and Prettier in an Angular Project](https://blog.stackademic.com/how-to-setup-eslint-and-prettier-in-an-angular-project-82065799bc00)
+
+## Docker Compose
+
+create docker-compose.yaml file.
+
+run docker-compose:
+
+```powershell
+
+NOTE: REBUILD IMAGES TO INCLUDE CODE CHANGES AND START
+docker-compose -f docker-compose.yaml up --build
+NOTE: START CONTAINERS FROM EXISTING IMAGES WITHOUT REBUILDING
+docker-compose -f docker-compose.yaml up -d
+NOTE: STOP RUNNING CONTAINERS AND REMOVE CONTAINERS
+docker-compose -f docker-compose.yaml down
+
+```

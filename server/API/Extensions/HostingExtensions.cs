@@ -27,6 +27,10 @@ public static class HostingExtensions
 
         builder.Services.AddCors();
 
+        // add redis
+        builder.Services.AddStackExchangeRedisCache(options =>
+            options.Configuration = builder.Configuration.GetConnectionString("Redis"));
+
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddExceptionHandler<GeneralExceptionHandler>();
     }
