@@ -197,3 +197,9 @@ NOTE: STOP RUNNING CONTAINERS AND REMOVE CONTAINERS
 docker-compose -f docker-compose.yaml down
 
 ```
+
+### Redis Commander
+
+[Github Repository](https://github.com/joeferner/redis-commander)
+
+[http://localhost:8081](http://localhost:8081)

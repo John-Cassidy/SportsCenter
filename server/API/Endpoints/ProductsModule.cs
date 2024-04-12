@@ -40,7 +40,8 @@ public static class ProductsModule
             .WithName("GetProducts")
             .Produces<Pagination<ProductDTO>>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
-            .Produces<string>(StatusCodes.Status404NotFound);
+            .Produces<string>(StatusCodes.Status404NotFound)
+            .Produces<string>(StatusCodes.Status500InternalServerError);
 
         endpoints.MapGet("/products/{id}",
             async (IMapper mapper, IRepository<Product> productRepository, int id) =>
@@ -60,7 +61,8 @@ public static class ProductsModule
             .WithName("GetProductById")
             .Produces<ProductDTO>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
-            .Produces<string>(StatusCodes.Status404NotFound);
+            .Produces<string>(StatusCodes.Status404NotFound)
+            .Produces<string>(StatusCodes.Status500InternalServerError);
 
         endpoints.MapGet("/products/brands",
             async (IRepository<ProductBrand> productBrandRepository) =>
@@ -71,7 +73,8 @@ public static class ProductsModule
             .WithName("GetProductBrands")
             .Produces<IList<ProductBrand>>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
-            .Produces<string>(StatusCodes.Status404NotFound);
+            .Produces<string>(StatusCodes.Status404NotFound)
+            .Produces<string>(StatusCodes.Status500InternalServerError);
 
         endpoints.MapGet("/products/types",
             async (IRepository<ProductType> productTypeRepository) =>
@@ -82,7 +85,8 @@ public static class ProductsModule
             .WithName("GetProductTypes")
             .Produces<IList<ProductType>>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
-            .Produces<string>(StatusCodes.Status404NotFound);
+            .Produces<string>(StatusCodes.Status404NotFound)
+            .Produces<string>(StatusCodes.Status500InternalServerError);
 
         return endpoints;
     }

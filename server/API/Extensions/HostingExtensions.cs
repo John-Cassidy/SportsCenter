@@ -22,6 +22,7 @@ public static class HostingExtensions
             opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
+        builder.Services.AddScoped<IBasketRepository, BasketRepository>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddIMapper();
 
@@ -61,6 +62,7 @@ public static class HostingExtensions
 
         app.AddWeatherForecastEndpoints();
         app.AddProductsEndpoints();
+        app.AddBasketEndpoints();
 
         using var scope = app.Services.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();

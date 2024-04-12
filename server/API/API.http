@@ -2,11 +2,31 @@
 
 GET {{API_HostAddress}}/weatherforecast/
 Accept: application/json
-
 ###
 GET {{API_HostAddress}}/products
 Accept: application/json
-
 ###
+GET {{API_HostAddress}}/products/25
+###
+GET {{API_HostAddress}}/basket/frizzoBasket
+Accept: application/json
+###
+POST {{API_HostAddress}}/basket
+Content-Type: application/json
 
-GET {{API_HostAddress}}/products/1
+{
+  "id": "frizzoBasket",
+  "items": [
+    {
+      "id": 25,
+      "productName": "Adidas FIFA World Cup 2018 OMB Football",
+      "price": 3200,
+      "quantity": 1,
+      "pictureUrl": "images/products/adidas_football-2.png",
+      "productType": "Football",
+      "productBrand": "Adidas"
+    }
+  ]
+}
+###
+DELETE {{API_HostAddress}}/basket/frizzoBasket
