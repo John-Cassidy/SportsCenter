@@ -339,12 +339,35 @@ CREATE src/app/basket/basket.component.scss (0 bytes)
 npx ng g s basket/basket --flat --skip-tests --dry-run
 
 #create basket/basket.routes.ts
-New-Item -Path . -Name "basket.routes.ts" -ItemType "file"
+New-Item -Path ./src/app/basket -Name "basket.routes.ts" -ItemType "file"
 
 npx ng g c shared/order-summary --skip-tests --dry-run
 CREATE src/app/shared/order-summary/order-summary.component.html (29 bytes)
 CREATE src/app/shared/order-summary/order-summary.component.ts (274 bytes)
 CREATE src/app/shared/order-summary/order-summary.component.scss (0 bytes)
+```
+
+## Generate GUIDs
+
+In an Angular 17 application, you can use the uuid npm package to generate a GUID.
+
+```powershell
+npm install uuid
+npm install @types/uuid --save-dev
+```
+
+```typescript
+import { v4 as uuidv4 } from 'uuid';
+
+export class Basket implements Basket {
+  id: string;
+  items: BasketItem[];
+
+  constructor(id: string = '', items: BasketItem[] = []) {
+    this.id = id || uuidv4(); // Generate a GUID if the id is empty
+    this.items = items;
+  }
+}
 ```
 
 ## Identity Server Client Implementation

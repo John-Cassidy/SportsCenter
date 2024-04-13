@@ -7,22 +7,22 @@
     />Sports Center
   </a>
   <ul class="nav">
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        routerLink="/"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        ><i class="fa fa-home"></i> Home</a
-      >
+    <li
+      class="nav-item"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a class="nav-link" routerLink="/"><i class="fa fa-home"></i> Home</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/store" routerLinkActive="active"
+    <li class="nav-item" routerLinkActive="active">
+      <a class="nav-link" routerLink="/store"
         ><i class="fa fa-shopping-basket"></i> Store</a
       >
     </li>
     <li class="nav-item" routerLinkActive="active">
-      <a class="nav-link" href="#"><i class="fa fa-shopping-cart"></i> Cart</a>
+      <a class="nav-link" routerLink="/basket"
+        ><i class="fa fa-shopping-cart"></i> Cart</a
+      >
     </li>
     <li class="nav-item" routerLinkActive="active">
       <a class="nav-link" href="#"><i class="fa fa-sign-out"></i> Logout</a>

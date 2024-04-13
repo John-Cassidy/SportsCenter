@@ -38,7 +38,9 @@ export class ProductDetailsComponent implements OnInit {
           this.product = product;
           this.breadCrumbService.set('@productName', product.name);
         },
-        error: (error) => console.log(error),
+        error: (error) => {
+          console.log(error);
+        },
       });
     }
   }

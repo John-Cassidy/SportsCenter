@@ -203,3 +203,9 @@ docker-compose -f docker-compose.yaml down
 [Github Repository](https://github.com/joeferner/redis-commander)
 
 [http://localhost:8081](http://localhost:8081)
+
+## Translate C# Class to Json to TypeScript
+
+[Json To C#](https://json2csharp.com/)
+[C# To Json](https://csharp2json.azurewebsites.net/)
+[Json To Typescript](https://json2ts.vercel.app/)

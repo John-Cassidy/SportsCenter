@@ -27,5 +27,11 @@ export const APP_ROUTES: Routes = [
       import('./store/store.routes').then((m) => m.STORE_ROUTES),
     data: { breadcrumb: 'Store' },
   },
+  {
+    path: 'basket',
+    loadChildren: () =>
+      import('./basket/basket.routes').then((m) => m.BASKET_ROUTES),
+    data: { breadcrumb: 'Basket' },
+  },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
