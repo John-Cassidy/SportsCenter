@@ -21,8 +21,13 @@
     </li>
     <li class="nav-item" routerLinkActive="active">
       <a class="nav-link" routerLink="/basket"
-        ><i class="fa fa-shopping-cart"></i> Cart</a
-      >
+        ><i class="fa fa-shopping-cart"></i> Cart<span
+          class="cart-no"
+          *ngIf="basketService.basketSubject$ | async as basket"
+        >
+          {{ getBasketCount(basket.items) }}</span
+        >
+      </a>
     </li>
     <li class="nav-item" routerLinkActive="active">
       <a class="nav-link" href="#"><i class="fa fa-sign-out"></i> Logout</a>

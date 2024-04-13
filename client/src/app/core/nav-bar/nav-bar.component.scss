@@ -1,6 +1,7 @@
 .navbar {
   background-color: #f8f9fa;
-  padding: 1rem;
+  padding: 0rem;
+  border-bottom: #333 1px solid;
   .navbar-brand {
     font-size: 1.5rem;
     color: #333;
@@ -26,4 +27,19 @@
       }
     }
   }
+}
+
+.cart-no {
+  position: sticky;
+  min-height: 25px;
+  min-width: 25px;
+  border-radius: 50%;
+  padding-right: 5px;
+  margin-left: 5px;
+  font-size: 0.8em;
+  background: rgba(184, 61, 4, 0.945);
+  color: white;
+  text-align: center;
+  top: -12px;
+  right: 32px;
 }

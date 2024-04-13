@@ -1,3 +1,5 @@
+import { BasketItem } from '../../shared/models/Basket';
+import { BasketService } from '../../basket/basket.service';
 import { Component } from '@angular/core';
 import { CoreComponent } from '..';
 import { SharedComponent } from '../../shared';
@@ -9,4 +11,10 @@ import { SharedComponent } from '../../shared';
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss',
 })
-export class NavBarComponent {}
+export class NavBarComponent {
+  constructor(public basketService: BasketService) {}
+
+  getBasketCount(items: BasketItem[]): number {
+    return items.reduce((sum, item) => sum + item.quantity, 0);
+  }
+}
