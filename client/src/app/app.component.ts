@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { BasketService } from './basket/basket.service';
 import { CoreComponent } from './core';
 import { RouterOutlet } from '@angular/router';
 import { SharedComponent } from './shared';
@@ -11,4 +13,17 @@ import { SharedComponent } from './shared';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  constructor(private basketService: BasketService) {}
+
+  ngOnInit(): void {
+    this.loadBasket();
+  }
+
+  loadBasket() {
+    const basketId = localStorage.getItem('basket_id');
+    if (basketId) {
+      this.basketService.getBasket(basketId);
+    }
+  }
+}

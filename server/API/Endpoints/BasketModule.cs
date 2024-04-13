@@ -11,10 +11,10 @@ public static class BasketModule
             async (IBasketRepository basketRepository, string id) =>
             {
                 var basket = await basketRepository.GetBasketAsync(id);
-                return basket != null ? Results.Ok(basket) : Results.NotFound($"Basket with id {id} not found.");
+                return Results.Ok(basket);
             })
             .WithName("GetBasket")
-            .Produces<Basket>(StatusCodes.Status200OK)
+            .Produces<Basket?>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status404NotFound)
             .Produces<string>(StatusCodes.Status500InternalServerError);
 

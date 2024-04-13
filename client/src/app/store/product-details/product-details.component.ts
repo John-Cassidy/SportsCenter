@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
+import { BasketService } from '../../basket/basket.service';
 import { BreadcrumbService } from 'xng-breadcrumb';
 import { CoreComponent } from '../../core';
 import { Product } from '../../shared/models/Product';
@@ -23,7 +24,8 @@ export class ProductDetailsComponent implements OnInit {
     private storeService: StoreService,
     private activatedRoute: ActivatedRoute,
     private breadCrumbService: BreadcrumbService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private basketService: BasketService
   ) {}
 
   ngOnInit(): void {
@@ -45,7 +47,12 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  addToCart() {}
+  addToCart() {
+    if (this.product) {
+      this.basketService.addItemToBasket(this.product, this.quantity);
+      this.toastr.success('Item added to cart');
+    }
+  }
 
   // Method to increment the quantity
   incrementQuantity() {

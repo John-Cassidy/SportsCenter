@@ -24,3 +24,9 @@ export class Basket implements Basket {
     this.items = items;
   }
 }
+
+export interface BasketTotal {
+  shipping: number;
+  subtotal: number;
+  total: number;
+}

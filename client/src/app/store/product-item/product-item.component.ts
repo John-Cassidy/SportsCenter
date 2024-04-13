@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 
+import { BasketService } from '../../basket/basket.service';
 import { Product } from '../../shared/models/Product';
 import { RouterModule } from '@angular/router';
 import { SharedComponent } from '../../shared';
@@ -13,4 +14,10 @@ import { SharedComponent } from '../../shared';
 })
 export class ProductItemComponent {
   @Input() product: Product | null = null;
+
+  constructor(private baseketService: BasketService) {}
+
+  addItemToBasket() {
+    this.product && this.baseketService.addItemToBasket(this.product);
+  }
 }
