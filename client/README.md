@@ -341,7 +341,7 @@ npx ng g s basket/basket --flat --skip-tests --dry-run
 #create basket/basket.routes.ts
 New-Item -Path ./src/app/basket -Name "basket.routes.ts" -ItemType "file"
 
-npx ng g c shared/order-summary --skip-tests --dry-run
+npx ng g c shared/order-summary --standalone --skip-tests --dry-run
 CREATE src/app/shared/order-summary/order-summary.component.html (29 bytes)
 CREATE src/app/shared/order-summary/order-summary.component.ts (274 bytes)
 CREATE src/app/shared/order-summary/order-summary.component.scss (0 bytes)

@@ -58,6 +58,9 @@
 
 <div class="row">
   <div class="col-6 offset-6">
+    <app-order-summary
+      *ngIf="basket && basket.items && basket.items.length > 0"
+    ></app-order-summary>
     <div class="d-grid">
       <button
         class="btn btn-success mt-3"

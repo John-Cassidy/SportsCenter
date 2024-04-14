@@ -1,4 +1,4 @@
-import { Basket, BasketItem } from '../shared/models/Basket';
+import { Basket, BasketItem, BasketTotal } from '../shared/models/Basket';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +13,14 @@ export class BasketService {
     new BehaviorSubject<Basket | null>(null);
   public basketSubject$ = this.basketSubject.asObservable();
 
+  private basketTotalSubject: BehaviorSubject<BasketTotal> =
+    new BehaviorSubject<BasketTotal>({
+      shipping: 0,
+      subtotal: 0,
+      total: 0,
+    });
+  public basketTotalSubject$ = this.basketTotalSubject.asObservable();
+
   private apiUrl = 'http://localhost:5096/basket';
 
   constructor(private http: HttpClient) {}
@@ -21,6 +29,7 @@ export class BasketService {
     return this.http.get<Basket>(`${this.apiUrl}/${id}`).subscribe({
       next: (basket) => {
         this.basketSubject.next(basket);
+        this.calculateTotal();
       },
       error: (error) => {
         console.error('Error fetching basket:', error);
@@ -32,6 +41,7 @@ export class BasketService {
     return this.http.post<Basket>(this.apiUrl, basket).subscribe({
       next: (updatedBasket) => {
         this.basketSubject.next(updatedBasket);
+        this.calculateTotal();
       },
       error: (error) => {
         console.error('Error updating basket:', error);
@@ -131,5 +141,17 @@ export class BasketService {
       items.push(basketItem);
     }
     return items;
+  }
+
+  private calculateTotal() {
+    const basket = this.getBasketSubjectCurrentValue();
+    if (!basket) {
+      this.basketTotalSubject.next({ shipping: 0, total: 0, subtotal: 0 });
+      return;
+    }
+    const shipping = 0;
+    const subtotal = basket.items.reduce((x, y) => y.price * y.quantity + x, 0);
+    const total = subtotal + shipping;
+    this.basketTotalSubject.next({ shipping, total, subtotal });
   }
 }

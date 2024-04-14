@@ -1,0 +1,22 @@
+<div
+  class="container mt-4"
+  *ngIf="basketService.basketTotalSubject$ | async as basketTotal"
+>
+  <h3>Order Summary</h3>
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>Subtotal:</td>
+        <td>{{ basketTotal.subtotal | currency : 'USD' }}</td>
+      </tr>
+      <tr>
+        <td>Shipping:</td>
+        <td>{{ basketTotal.shipping | currency : 'USD' }}</td>
+      </tr>
+      <tr class="table-success">
+        <td>Total:</td>
+        <td>{{ basketTotal.total | currency : 'USD' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
