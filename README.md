@@ -209,3 +209,81 @@ docker-compose -f docker-compose.yaml down
 [Json To C#](https://json2csharp.com/)
 [C# To Json](https://csharp2json.azurewebsites.net/)
 [Json To Typescript](https://json2ts.vercel.app/)
+
+## Identity
+
+### Identity Server Implementation
+
+- Setting up ASP.NET Identity
+- Using EF with Identity
+- JWT Tokens
+- Using Forms in Angular
+- Validating form inputs
+- App initialization
+- Transfering anonymous basket to logged in user
+
+#### Nuget Packages
+
+Add Nuget Package to Core project:
+
+- Microsoft.Extensions.Identity.Stores
+
+Create User.cs file in the Restore.Core project
+
+```csharp
+using Microsoft.AspNetCore.Identity;
+
+namespace Core
+{
+    public class User : IdentityUser<int>
+    {
+        public UserAddress Address { get; set; }
+    }
+}
+```
+
+Add Nuget Package to Core project:
+
+- Microsoft.EntityFrameworkCore.Abstractions
+- Microsoft.Extensions.Identity.Stores
+
+Add Nuget Packages to Infrastructure project:
+
+- Microsoft.AspNetCore.Authentication.JwtBearer
+- Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+Create AccountRepository.cs file in the Restore.Infrastructure project
+
+```csharp
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Core;
+
+namespace Infrastructure
+{
+    public class AccountRepository
+    {
+        private readonly IdentityDbContext<User> _context;
+
+        public AccountRepository(IdentityDbContext<User> context)
+        {
+            _context = context;
+        }
+
+        // Add methods for interacting with the User entities in the database here
+    }
+}
+```
+
+#### Identity Migrations
+
+```powershell
+
+# add migration
+dotnet ef migrations add InitialIdentityCreate -o Identity/Migrations -p server/Infrastructure -s server/Api -c ApplicationIdentityDbContext
+
+# review and then if needed, remove this migration in order to adjust entities and their relations.
+dotnet ef migrations remove -p server/Infrastructure -s server/Api
+
+# apply pending migration
+dotnet ef database update -s server/Services/Restore/Restore.Api
+```

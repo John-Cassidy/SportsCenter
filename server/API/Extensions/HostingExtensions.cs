@@ -4,6 +4,7 @@ using API.Profiles;
 using AutoMapper;
 using Core.Repositories;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,10 @@ public static class HostingExtensions
         builder.Services.AddDbContext<SportsCenterContext>(opt =>
         {
             opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
+        builder.Services.AddDbContext<ApplicationIdentityDbContext>(opt =>
+        {
+            opt.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection"));
         });
 
         builder.Services.AddScoped<IBasketRepository, BasketRepository>();

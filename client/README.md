@@ -370,7 +370,9 @@ export class Basket implements Basket {
 }
 ```
 
-## Identity Server Client Implementation
+## Identity
+
+### Identity Client Implementation
 
 Integrate IdentityServer into UI:
 
