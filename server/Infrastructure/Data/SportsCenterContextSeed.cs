@@ -27,7 +27,7 @@ public class SportsCenterContextSeed
                 await SeedProductsAsync(context);
                 // If all seeding steps are successful, commit the transaction
                 transaction.Commit();
-                _logger.LogInformation("Seeded the database.");
+                _logger.LogInformation("Seeded the SportsCenter database.");
             }
         }
         catch (Exception ex)

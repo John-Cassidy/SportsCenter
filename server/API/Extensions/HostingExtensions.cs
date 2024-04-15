@@ -2,10 +2,12 @@
 using API.Handlers;
 using API.Profiles;
 using AutoMapper;
+using Core.Entities.Identity;
 using Core.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Identity;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions;
@@ -31,7 +33,14 @@ public static class HostingExtensions
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddIMapper();
 
+        builder.Services
+            .AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+            .AddDefaultTokenProviders();
+
         builder.Services.AddCors();
+
+        builder.Services.AddAuthorization();
 
         // add redis
         builder.Services.AddStackExchangeRedisCache(options =>
@@ -63,6 +72,9 @@ public static class HostingExtensions
                 .AllowAnyMethod()
         );
 
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.UseExceptionHandler(_ => { });
 
         app.AddWeatherForecastEndpoints();
@@ -81,10 +93,15 @@ public static class HostingExtensions
             var seedLogger = scope.ServiceProvider.GetRequiredService<ILogger<SportsCenterContextSeed>>();
             var sportsContextSeed = new SportsCenterContextSeed(seedLogger);
             await sportsContextSeed.SeedDataAsync(context);
+
+            // Seed data for ApplicationIdentityDbContext
+            var identityLogger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationIdentityDbContextSeed>>();
+            var identityContextSeed = new ApplicationIdentityDbContextSeed(identityLogger);
+            await identityContextSeed.SeedAsync(scope.ServiceProvider);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occurred while migrating the database.");
+            logger.LogError(ex, "An error occurred while migrating the databases.");
         }
 
         return app;

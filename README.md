@@ -11,7 +11,7 @@ Building FullStack App using Net8 &amp; Angular
 When setting up development for first time with SqlServer container, run manual migration from command line in solution folder.
 
 ```powershell
-dotnet ef migrations add InitialCreate -o Data/Migrations -p server/Infrastructure -s server/Api
+dotnet ef migrations add InitialCreate -o Data/Migrations -p server/Infrastructure -s server/Api -c SportsCenterContext
 ```
 
 Where InitialCreate is the name that we will give our migration, you can change this name with details of what your migration refers to, such as changing a field in a table, adding or removing fields, by convention we try to detail the update that the migration will do.
@@ -27,7 +27,7 @@ If everything went well after running the command you will get a message like th
 The migrations remove command is used to remove the created migration if it is not as you wanted.
 
 ```powershell
-dotnet ef migrations remove -p server/Infrastructure -s server/Api
+dotnet ef migrations remove -p server/Infrastructure -s server/Api -c SportsCenterContext
 ```
 
 ### Update database schema with Migration
@@ -39,7 +39,7 @@ The `-p` option specifies the project that contains the DbContext at `server/Inf
 The `-s` option specifies the startup project, which is the project that the tools build and run to get the DbContext and its configuration. In this case, the startup project is located at `server/Api`.
 
 ```powershell
-dotnet ef database update -p server/Infrastructure -s server/Api
+dotnet ef database update -p server/Infrastructure -s server/Api -c SportsCenterContext
 ```
 
 ## Implement Error Handling
@@ -282,8 +282,8 @@ namespace Infrastructure
 dotnet ef migrations add InitialIdentityCreate -o Identity/Migrations -p server/Infrastructure -s server/Api -c ApplicationIdentityDbContext
 
 # review and then if needed, remove this migration in order to adjust entities and their relations.
-dotnet ef migrations remove -p server/Infrastructure -s server/Api
+dotnet ef migrations remove -p server/Infrastructure -s server/Api -c ApplicationIdentityDbContext
 
 # apply pending migration
-dotnet ef database update -s server/Services/Restore/Restore.Api
+dotnet ef database update -p server/Infrastructure -s server/Api -c ApplicationIdentityDbContext
 ```
