@@ -80,6 +80,7 @@ public static class HostingExtensions
         app.AddWeatherForecastEndpoints();
         app.AddProductsEndpoints();
         app.AddBasketEndpoints();
+        app.AddAccountEndpoints();
 
         using var scope = app.Services.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
