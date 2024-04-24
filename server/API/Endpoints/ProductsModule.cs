@@ -14,8 +14,13 @@ public static class ProductsModule
     public static IEndpointRouteBuilder AddProductsEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/products",
-            async (IMapper mapper, IRepository<Product> productRepository, [AsParameters] ProductParams productParams) =>
+            async (HttpContext context, IMapper mapper, IRepository<Product> productRepository, [AsParameters] ProductParams productParams) =>
             {
+                // if (!context.User.Identity?.IsAuthenticated ?? false)
+                // {
+                //     return Results.Unauthorized();
+                // }
+
                 // Create a specification
                 var sort = productParams.Sort ?? string.Empty;
                 var productTypeId = productParams.ProductTypeId;
@@ -41,6 +46,7 @@ public static class ProductsModule
             .Produces<Pagination<ProductDTO>>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
             .Produces<string>(StatusCodes.Status404NotFound)
+            // .Produces(StatusCodes.Status401Unauthorized)
             .Produces<string>(StatusCodes.Status500InternalServerError);
 
         endpoints.MapGet("/products/{id}",
