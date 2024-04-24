@@ -48,25 +48,23 @@ public static class HostingExtensions
 
         builder.Services.AddCors();
 
-        builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options =>
-        {
-            var tokenSettings = builder.Configuration.GetSection("TokenSettings").Get<TokenSettings>();
-            options.TokenValidationParameters = new TokenValidationParameters
+        builder.Services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = tokenSettings.Issuer,
-                ValidAudience = tokenSettings.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key))
-            };
-        });
+                var tokenSettings = builder.Configuration.GetSection("TokenSettings").Get<TokenSettings>();
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = tokenSettings.Issuer,
+                    ValidAudience = tokenSettings.Audience,
+                    NameClaimType = "name", // Add this line
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key))
+                };
+            });
 
         builder.Services.AddAuthorization();
 

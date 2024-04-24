@@ -94,6 +94,41 @@ public static class AccountModule
             .WithName("Logout")
             .Produces<NoContent>(StatusCodes.Status204NoContent);
 
+        endpoints.MapGet("account/load-user", [Authorize] async (UserManager<ApplicationUser> userManager, ITokenGenerationService _tokenService, ClaimsPrincipal User) =>
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return Results.NotFound(new { Message = "User not found" });
+            }
+
+            // Generate a JWT token with user claims
+            var tokenClaims = new List<Claim>
+        {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.DisplayName),
+                new Claim(ClaimTypes.Email, user.Email),
+            // Add more claims as needed
+        };
+
+            // Generate the JWT token
+            var token = _tokenService.GenerateToken(tokenClaims);
+
+            var userDto = new UserDto
+            {
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Token = token // Set the Token property with the generated token
+            };
+
+            return Results.Ok(userDto);
+        })
+        .WithName("LoadUser")
+        .Produces<UserDto>(StatusCodes.Status200OK)
+        .Produces<string>(StatusCodes.Status404NotFound);
+
         endpoints.MapGet("account/user-address", [Authorize] async (UserManager<ApplicationUser> userManager, ClaimsPrincipal User, ApplicationIdentityDbContext dbContext, IMapper mapper) =>
         {
             var userId = userManager.GetUserId(User);
@@ -110,7 +145,12 @@ public static class AccountModule
                 ZipCode = user.Address.ZipCode
             } : null;
             return Results.Ok(address);
-        });
+        })
+            .WithName("GetUserAddress")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
 
         endpoints.MapGet("account/check-email-exists",
             async (UserManager<ApplicationUser> userManager, string email) =>
