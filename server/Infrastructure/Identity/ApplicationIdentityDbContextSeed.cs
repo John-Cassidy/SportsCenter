@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -14,14 +15,29 @@ public class ApplicationIdentityDbContextSeed
         _logger = logger;
     }
 
-    public async Task SeedAsync(IServiceProvider serviceProvider)
+    public async Task MigrateAndSeedAsync(IServiceProvider serviceProvider)
     {
         using (var scope = serviceProvider.CreateScope())
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>();
 
+            await MigrateAsync(context);
+
             await SeedUserAsync(userManager, context);
+        }
+    }
+
+    private async Task MigrateAsync(ApplicationIdentityDbContext context)
+    {
+        try
+        {
+            await context.Database.MigrateAsync();
+            await context.Database.EnsureCreatedAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while migrating the identity database.");
         }
     }
 
@@ -68,7 +84,7 @@ public class ApplicationIdentityDbContextSeed
         catch (Exception ex)
         {
             transaction.Rollback();
-            _logger.LogError(ex, "An error occurred while seeding the database.");
+            _logger.LogError(ex, "An error occurred while seeding the identity database.");
             throw;
         }
     }

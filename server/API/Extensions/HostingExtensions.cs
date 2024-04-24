@@ -98,7 +98,7 @@ public static class HostingExtensions
             // Seed data for ApplicationIdentityDbContext
             var identityLogger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationIdentityDbContextSeed>>();
             var identityContextSeed = new ApplicationIdentityDbContextSeed(identityLogger);
-            await identityContextSeed.SeedAsync(scope.ServiceProvider);
+            await identityContextSeed.MigrateAndSeedAsync(scope.ServiceProvider);
         }
         catch (Exception ex)
         {

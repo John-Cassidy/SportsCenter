@@ -6,6 +6,7 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints;
 
@@ -20,7 +21,12 @@ public static class AccountModule
             //     return BadRequest(ModelState);
             // }
 
-            var user = mapper.Map<ApplicationUser>(model);
+            var user = new ApplicationUser
+            {
+                DisplayName = model.DisplayName,
+                Email = model.Email,
+                UserName = model.Email
+            };
 
             var result = await userManager.CreateAsync(user, model.Password);
 
@@ -31,7 +37,10 @@ public static class AccountModule
 
             return Results.BadRequest(new { Message = "Registration failed", Errors = result.Errors });
 
-        });
+        })
+        .WithName("Register")
+        .Produces(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status400BadRequest);
 
         endpoints.MapPost("account/login",
             async (UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, LoginDto model) =>
@@ -84,9 +93,17 @@ public static class AccountModule
         {
             var userId = userManager.GetUserId(User);
             if (userId == null) return Results.Unauthorized();
-            var user = dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var user = dbContext.Users.Include(u => u.Address).FirstOrDefault(u => u.Id == userId);
             if (user == null) return Results.NotFound();
-            var address = mapper.Map<AddressDto>(user.Address);
+            var address = new AddressDto
+            {
+                FirstName = user.Address.FirstName,
+                LastName = user.Address.LastName,
+                Street = user.Address.Street,
+                City = user.Address.City,
+                State = user.Address.State,
+                ZipCode = user.Address.ZipCode
+            };
             return Results.Ok(address);
         });
 
@@ -120,16 +137,37 @@ public static class AccountModule
                 // }
 
                 var userId = userManager.GetUserId(User);
-                var user = dbContext.Users.Find(userId);
+                var user = dbContext.Users.Include(u => u.Address).FirstOrDefault(u => u.Id == userId);
 
                 if (user == null)
                 {
                     return Results.NotFound(new { Message = "User not found" });
                 }
+                if (user.Address == null)
+                {
+                    user.Address = new Address
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ApplicationUserId = user.Id,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Street = model.Street,
+                        City = model.City,
+                        State = model.State,
+                        ZipCode = model.ZipCode
+                    };
+                }
+                else
+                {
+                    user.Address.FirstName = model.FirstName;
+                    user.Address.LastName = model.LastName;
+                    user.Address.Street = model.Street;
+                    user.Address.City = model.City;
+                    user.Address.State = model.State;
+                    user.Address.ZipCode = model.ZipCode;
+                }
 
-                var address = mapper.Map<Address>(model);
-                user.Address = address;
-
+                dbContext.Users.Update(user);
                 await dbContext.SaveChangesAsync();
 
                 return Results.Ok(new { Message = "User address updated successfully" });
