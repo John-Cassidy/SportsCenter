@@ -95,7 +95,7 @@ public static class AccountModule
             if (userId == null) return Results.Unauthorized();
             var user = dbContext.Users.Include(u => u.Address).FirstOrDefault(u => u.Id == userId);
             if (user == null) return Results.NotFound();
-            var address = new AddressDto
+            var address = user.Address != null ? new AddressDto
             {
                 FirstName = user.Address.FirstName,
                 LastName = user.Address.LastName,
@@ -103,7 +103,7 @@ public static class AccountModule
                 City = user.Address.City,
                 State = user.Address.State,
                 ZipCode = user.Address.ZipCode
-            };
+            } : null;
             return Results.Ok(address);
         });
 
@@ -137,6 +137,12 @@ public static class AccountModule
                 // }
 
                 var userId = userManager.GetUserId(User);
+
+                if (userId == null)
+                {
+                    return Results.Unauthorized();
+                }
+
                 var user = dbContext.Users.Include(u => u.Address).FirstOrDefault(u => u.Id == userId);
 
                 if (user == null)
@@ -149,6 +155,7 @@ public static class AccountModule
                     {
                         Id = Guid.NewGuid().ToString(),
                         ApplicationUserId = user.Id,
+                        ApplicationUser = user,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Street = model.Street,
@@ -156,6 +163,7 @@ public static class AccountModule
                         State = model.State,
                         ZipCode = model.ZipCode
                     };
+                    dbContext.Address.Add(user.Address);
                 }
                 else
                 {
@@ -165,9 +173,9 @@ public static class AccountModule
                     user.Address.City = model.City;
                     user.Address.State = model.State;
                     user.Address.ZipCode = model.ZipCode;
+                    dbContext.Entry(user.Address).State = EntityState.Modified;
                 }
 
-                dbContext.Users.Update(user);
                 await dbContext.SaveChangesAsync();
 
                 return Results.Ok(new { Message = "User address updated successfully" });
@@ -176,7 +184,8 @@ public static class AccountModule
             .WithName("UpdateUserAddress")
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
 
         return endpoints;
     }
