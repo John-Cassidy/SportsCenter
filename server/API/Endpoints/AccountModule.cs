@@ -2,6 +2,7 @@
 using API.DTOs;
 using AutoMapper;
 using Core.Entities.Identity;
+using Core.Services;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -43,7 +44,11 @@ public static class AccountModule
         .Produces(StatusCodes.Status400BadRequest);
 
         endpoints.MapPost("account/login",
-            async (UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, LoginDto model) =>
+            async (
+                UserManager<ApplicationUser> userManager,
+                SignInManager<ApplicationUser> signInManager,
+                ITokenGenerationService _tokenService,
+                LoginDto model) =>
             {
                 // if (!ModelState.IsValid)
                 // {
@@ -66,12 +71,12 @@ public static class AccountModule
                 };
 
                     // // Generate the JWT token
-                    // var token = _tokenService.GenerateToken(tokenClaims);
+                    var token = _tokenService.GenerateToken(tokenClaims);
 
                     return Results.Ok(new UserDto
                     {
                         Email = user.Email,
-                        Token = "TEST",
+                        Token = token,
                         DisplayName = user.DisplayName
                     });
                 }

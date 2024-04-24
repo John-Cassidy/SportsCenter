@@ -1,14 +1,19 @@
-﻿using API.Endpoints;
+﻿using System.Text;
+using API.Endpoints;
 using API.Handlers;
 using API.Profiles;
 using AutoMapper;
 using Core.Entities.Identity;
 using Core.Repositories;
+using Core.Services;
 using Infrastructure.Data;
 using Infrastructure.Identity;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Extensions;
 
@@ -29,7 +34,10 @@ public static class HostingExtensions
             opt.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection"));
         });
 
+        builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+
         builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+        builder.Services.AddScoped<ITokenGenerationService, TokenGenerationService>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddIMapper();
 
@@ -39,6 +47,26 @@ public static class HostingExtensions
             .AddDefaultTokenProviders();
 
         builder.Services.AddCors();
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            var tokenSettings = builder.Configuration.GetSection("TokenSettings").Get<TokenSettings>();
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = tokenSettings.Issuer,
+                ValidAudience = tokenSettings.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key))
+            };
+        });
 
         builder.Services.AddAuthorization();
 
