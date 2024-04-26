@@ -403,7 +403,7 @@ CREATE src/app/account/account.component.scss (0 bytes)
 npx ng g s account/account --flat --skip-tests --dry-run
 
 #create account/account.routes.ts
-New-Item -Path . -Name "account.routes.ts" -ItemType "file"
+New-Item -Path ./src/app/account -Name "account.routes.ts" -ItemType "file"
 
 npx ng g c account/login --standalone --skip-tests=true --dry-run
 CREATE src/app/account/login/login.component.html (21 bytes)

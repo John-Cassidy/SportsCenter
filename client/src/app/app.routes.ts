@@ -33,5 +33,11 @@ export const APP_ROUTES: Routes = [
       import('./basket/basket.routes').then((m) => m.BASKET_ROUTES),
     data: { breadcrumb: 'Basket' },
   },
+  {
+    path: 'account',
+    loadChildren: () =>
+      import('./account/account.routes').then((m) => m.ACCOUNT_ROUTES),
+    data: { breadcrumb: { skip: true } },
+  },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
