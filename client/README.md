@@ -416,6 +416,12 @@ CREATE src/app/account/register/register.component.ts (255 bytes)
 CREATE src/app/account/register/register.component.scss (0 bytes)
 ```
 
+```powershell
+# example of creating function based interceptor:
+# - export const authHttpInterceptor: HttpInterceptorFn
+npx ng g interceptor core/interceptors/authHttp --functional --skip-tests --dry-run
+```
+
 Checkout Component, Checkout Service
 
 ```powershell
@@ -429,24 +435,4 @@ npx ng g s checkout/checkout --flat --skip-tests --dry-run
 
 #create checkout/checkout.routes.ts
 New-Item -Path . -Name "checkout.routes.ts" -ItemType "file"
-```
-
-Authentication Workflow
-
-```powershell
-# install oidc-client package
-npm i oidc-client --legacy-peer-deps
-```
-
-```powershell
-npx ng g s account/acnt --flat --skip-tests --dry-run
-CREATE src/app/account/acnt.service.ts (142 bytes)
-
-npx ng g c account/signin-redirect-callback --standalone -t -s --skip-tests --dry-run
-
-npx ng g c account/signout-redirect-callback.component --standalone -t -s --skip-tests --dry-run
-
-npx ng generate guard core/guards/auth --flat --skip-tests --dry-run
-? Which type of guard would you like to create? CanActivate
-CREATE src/app/core/guards/auth.guard.ts (133 bytes)
 ```

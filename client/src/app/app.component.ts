@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+import { AccountService } from './account/account.service';
 import { BasketService } from './basket/basket.service';
 import { CoreComponent } from './core';
 import { RouterOutlet } from '@angular/router';
@@ -14,10 +15,15 @@ import { SharedComponent } from './shared';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  constructor(private basketService: BasketService) {}
+  constructor(
+    private basketService: BasketService,
+    private accountService: AccountService
+  ) {}
 
   ngOnInit(): void {
     this.loadBasket();
+    this.loadUser();
+    this.getUserAddress();
   }
 
   loadBasket() {
@@ -25,5 +31,15 @@ export class AppComponent implements OnInit {
     if (basketId) {
       this.basketService.getBasket(basketId);
     }
+  }
+
+  loadUser() {
+    this.accountService.loadUser();
+  }
+
+  getUserAddress() {
+    this.accountService.getUserAddress().subscribe(() => {
+      console.log('Address loaded');
+    });
   }
 }

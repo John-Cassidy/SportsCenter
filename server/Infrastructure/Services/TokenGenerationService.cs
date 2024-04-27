@@ -34,4 +34,30 @@ public class TokenGenerationService : ITokenGenerationService
         var tokenHandler = new JwtSecurityTokenHandler();
         return tokenHandler.WriteToken(token);
     }
+
+    public ClaimsPrincipal ValidateToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_tokenSettings.Key);
+
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = true,
+            ValidIssuer = _tokenSettings.Issuer,
+            ValidateAudience = true,
+            ValidAudience = _tokenSettings.Audience
+        };
+
+        try
+        {
+            var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+            return claimsPrincipal;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

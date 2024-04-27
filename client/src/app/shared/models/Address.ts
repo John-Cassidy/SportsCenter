@@ -6,3 +6,8 @@ export interface Address {
   state: string;
   zipCode: string;
 }
+
+export interface UserAddress {
+  email: string;
+  address?: Address;
+}

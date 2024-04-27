@@ -43,8 +43,8 @@ public static class HostingExtensions
 
         builder.Services
             .AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
-            .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+        // .AddDefaultTokenProviders();
 
         builder.Services.AddCors();
 
@@ -55,13 +55,14 @@ public static class HostingExtensions
                 var tokenSettings = builder.Configuration.GetSection("TokenSettings").Get<TokenSettings>();
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = tokenSettings.Issuer,
-                    ValidAudience = tokenSettings.Audience,
                     NameClaimType = "name", // Add this line
+                    // ValidIssuer = tokenSettings.Issuer,
+                    // ValidAudience = tokenSettings.Audience,
+                    // NameClaimType = "name", // Add this line
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key))
                 };
             });

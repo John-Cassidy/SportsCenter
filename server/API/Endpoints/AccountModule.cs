@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using API.DTOs;
 using AutoMapper;
 using Core.Entities.Identity;
@@ -61,14 +62,12 @@ public static class AccountModule
                 {
                     var user = await userManager.FindByEmailAsync(model.Email);
 
-                    // Generate a JWT token with user claims
                     var tokenClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Name, user.DisplayName),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    // Add more claims as needed
-                };
+                    {
+                        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                        new Claim(JwtRegisteredClaimNames.Name, user.UserName)
+                    };
 
                     // // Generate the JWT token
                     var token = _tokenService.GenerateToken(tokenClaims);
@@ -94,9 +93,34 @@ public static class AccountModule
             .WithName("Logout")
             .Produces<NoContent>(StatusCodes.Status204NoContent);
 
-        endpoints.MapGet("account/load-user", [Authorize] async (UserManager<ApplicationUser> userManager, ITokenGenerationService _tokenService, ClaimsPrincipal User) =>
+        endpoints.MapGet("account/load-user", async (UserManager<ApplicationUser> userManager, ITokenGenerationService _tokenService, HttpContext context) =>
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string? userId = null;
+
+            if (context.User?.Identity?.IsAuthenticated == true)
+            {
+                // use this when the user is authenticated using the cookie (Swagger UI)
+                userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+            else if (context.Request.Headers.ContainsKey("Authorization"))
+            {
+                string authorizationHeader = context.Request.Headers["Authorization"];
+                string bearerToken = authorizationHeader.Substring("Bearer ".Length);
+                var claimsPrincipal = _tokenService.ValidateToken(bearerToken);
+
+                if (claimsPrincipal == null)
+                {
+                    return Results.Unauthorized();
+                }
+
+                userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+
+            if (userId == null)
+            {
+                return Results.Unauthorized();
+            }
+
             var user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
@@ -104,14 +128,12 @@ public static class AccountModule
                 return Results.NotFound(new { Message = "User not found" });
             }
 
-            // Generate a JWT token with user claims
             var tokenClaims = new List<Claim>
-        {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.DisplayName),
-                new Claim(ClaimTypes.Email, user.Email),
-            // Add more claims as needed
-        };
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName)
+            };
 
             // Generate the JWT token
             var token = _tokenService.GenerateToken(tokenClaims);
@@ -127,12 +149,37 @@ public static class AccountModule
         })
         .WithName("LoadUser")
         .Produces<UserDto>(StatusCodes.Status200OK)
+        .Produces<string>(StatusCodes.Status401Unauthorized)
         .Produces<string>(StatusCodes.Status404NotFound);
 
-        endpoints.MapGet("account/user-address", [Authorize] async (UserManager<ApplicationUser> userManager, ClaimsPrincipal User, ApplicationIdentityDbContext dbContext, IMapper mapper) =>
+        endpoints.MapGet("account/user-address", async (UserManager<ApplicationUser> userManager, ITokenGenerationService _tokenService, HttpContext context, ApplicationIdentityDbContext dbContext, IMapper mapper) =>
         {
-            var userId = userManager.GetUserId(User);
-            if (userId == null) return Results.Unauthorized();
+            string? userId = null;
+
+            if (context.User?.Identity?.IsAuthenticated == true)
+            {
+                // use this when the user is authenticated using the cookie (Swagger UI)
+                userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+            else if (context.Request.Headers.ContainsKey("Authorization"))
+            {
+                string authorizationHeader = context.Request.Headers["Authorization"];
+                string bearerToken = authorizationHeader.Substring("Bearer ".Length);
+                var claimsPrincipal = _tokenService.ValidateToken(bearerToken);
+
+                if (claimsPrincipal == null)
+                {
+                    return Results.Unauthorized();
+                }
+
+                userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+
+            if (userId == null)
+            {
+                return Results.Unauthorized();
+            }
+
             var user = dbContext.Users.Include(u => u.Address).FirstOrDefault(u => u.Id == userId);
             if (user == null) return Results.NotFound();
             var address = user.Address != null ? new AddressDto
@@ -174,14 +221,33 @@ public static class AccountModule
             .Produces(StatusCodes.Status400BadRequest);
 
         endpoints.MapPost("account/update-user-address",
-            [Authorize] async (UserManager<ApplicationUser> userManager, ClaimsPrincipal User, AddressDto model, ApplicationIdentityDbContext dbContext, IMapper mapper) =>
+            async (UserManager<ApplicationUser> userManager, ITokenGenerationService _tokenService, HttpContext context, AddressDto model, ApplicationIdentityDbContext dbContext, IMapper mapper) =>
             {
                 // if (!ModelState.IsValid)
                 // {
                 //     return BadRequest(ModelState);
                 // }
 
-                var userId = userManager.GetUserId(User);
+                string? userId = null;
+
+                if (context.User?.Identity?.IsAuthenticated == true)
+                {
+                    // use this when the user is authenticated using the cookie (Swagger UI)
+                    userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                }
+                else if (context.Request.Headers.ContainsKey("Authorization"))
+                {
+                    string authorizationHeader = context.Request.Headers["Authorization"];
+                    string bearerToken = authorizationHeader.Substring("Bearer ".Length);
+                    var claimsPrincipal = _tokenService.ValidateToken(bearerToken);
+
+                    if (claimsPrincipal == null)
+                    {
+                        return Results.Unauthorized();
+                    }
+
+                    userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+                }
 
                 if (userId == null)
                 {
