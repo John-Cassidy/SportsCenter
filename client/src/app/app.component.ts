@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.loadBasket();
     this.loadUser();
-    this.getUserAddress();
   }
 
   loadBasket() {
@@ -35,11 +34,5 @@ export class AppComponent implements OnInit {
 
   loadUser() {
     this.accountService.loadUser();
-  }
-
-  getUserAddress() {
-    this.accountService.getUserAddress().subscribe(() => {
-      console.log('Address loaded');
-    });
   }
 }

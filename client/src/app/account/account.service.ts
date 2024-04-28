@@ -37,6 +37,7 @@ export class AccountService {
         if (user) {
           localStorage.setItem('token', user.token);
           this.userSource.next(user);
+          this.loadUserAddress();
         }
         return user;
       })
@@ -56,6 +57,7 @@ export class AccountService {
       tap(() => {
         localStorage.removeItem('token');
         this.userSource.next(null);
+        localStorage.removeItem('userAddress');
         this.router.navigateByUrl('/');
         return;
       }),
@@ -122,46 +124,49 @@ export class AccountService {
             if (user) {
               localStorage.setItem('token', user.token);
               this.userSource.next(user);
+              this.loadUserAddress();
             }
           },
           error: (error: any) => {
             console.error('Error in loadUser:', error);
           },
         });
+    } else {
+      this.userSource.next(null);
+      localStorage.removeItem('userAddress');
     }
   }
 
-  getUserAddress(): Observable<UserAddress> | Observable<never> {
+  loadUserAddress() {
     const token = localStorage.getItem('token');
-    if (!token) {
-      return EMPTY;
+    if (token) {
+      this.http
+        .get<Address>(this.apiUrl + '/user-address')
+        .pipe(
+          map((address: Address) => {
+            // Get the current user from userSource
+            const user = this.userSource.value;
+            // If user is null, throw an error
+            if (!user) {
+              throw new Error('User is null');
+            }
+            // Create a new UserAddress object
+            const userAddress: UserAddress = {
+              email: user.email,
+              address: address,
+            };
+            return userAddress;
+          }),
+          tap((userAddress: UserAddress) => {
+            // Store the userAddress in localStorage
+            localStorage.setItem('userAddress', JSON.stringify(userAddress));
+          }),
+          catchError((error: any) => {
+            console.error('Error in getUserAddress:', error);
+            throw error;
+          })
+        )
+        .subscribe();
     }
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http
-      .get<Address>(this.apiUrl + '/user-address', { headers: headers })
-      .pipe(
-        map((address: Address) => {
-          // Get the current user from userSource
-          const user = this.userSource.value;
-          // If user is null, throw an error
-          if (!user) {
-            throw new Error('User is null');
-          }
-          // Create a new UserAddress object
-          const userAddress: UserAddress = {
-            email: user.email,
-            address: address,
-          };
-          return userAddress;
-        }),
-        tap((userAddress: UserAddress) => {
-          // Store the userAddress in localStorage
-          localStorage.setItem('userAddress', JSON.stringify(userAddress));
-        }),
-        catchError((error: any) => {
-          console.error('Error in getUserAddress:', error);
-          throw error;
-        })
-      );
   }
 }
