@@ -16,6 +16,24 @@
                 class="form-control"
                 placeholder="Enter your email"
               />
+              <div
+                *ngIf="
+                  loginForm.get('email')?.hasError('required') &&
+                  loginForm.get('email')?.touched
+                "
+                class="text-danger"
+              >
+                Email is required.
+              </div>
+              <div
+                *ngIf="
+                  loginForm.get('email')?.hasError('email') &&
+                  loginForm.get('email')?.touched
+                "
+                class="text-danger"
+              >
+                Invalid email address.
+              </div>
             </div>
             <div>
               <label for="password" class="form-label">Password:</label>
@@ -26,6 +44,15 @@
                 class="form-control"
                 placeholder="Enter your password"
               />
+            </div>
+            <div
+              *ngIf="
+                loginForm.get('password')?.hasError('required') &&
+                loginForm.get('password')?.touched
+              "
+              class="text-danger"
+            >
+              Password is required.
             </div>
             <div>
               <label for="rememberMe" class="form-check-label"
