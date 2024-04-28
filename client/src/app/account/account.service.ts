@@ -6,7 +6,9 @@ import {
   Subscription,
   catchError,
   map,
+  switchMap,
   tap,
+  throwError,
 } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -44,10 +46,29 @@ export class AccountService {
     );
   }
 
+  // register(model: Register): Observable<{ message: string }> {
+  //   return this.http.post<{ message: string }>(
+  //     this.apiUrl + '/register',
+  //     model
+  //   );
+  // }
+
   register(model: Register): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(
-      this.apiUrl + '/register',
-      model
+    return this.checkEmailExists(model.email).pipe(
+      switchMap((response: { emailExists: boolean }) => {
+        if (!response.emailExists) {
+          return this.http.post<{ message: string }>(
+            this.apiUrl + '/register',
+            model
+          );
+        } else {
+          return throwError(new Error('Email is already in use'));
+        }
+      }),
+      catchError((error) => {
+        // Handle any errors from the HTTP request
+        return throwError(error);
+      })
     );
   }
 
@@ -68,8 +89,8 @@ export class AccountService {
     );
   }
 
-  checkEmailExists(email: string): Observable<boolean> {
-    return this.http.get<boolean>(
+  checkEmailExists(email: string): Observable<{ emailExists: boolean }> {
+    return this.http.get<{ emailExists: boolean }>(
       this.apiUrl + '/check-email-exists?email=' + email
     );
   }
