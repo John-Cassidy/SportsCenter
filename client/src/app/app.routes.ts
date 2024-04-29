@@ -34,6 +34,12 @@ export const APP_ROUTES: Routes = [
     data: { breadcrumb: 'Basket' },
   },
   {
+    path: 'checkout',
+    loadChildren: () =>
+      import('./checkout/checkout.routes').then((m) => m.CHECKOUT_ROUTES),
+    data: { breadcrumb: 'Checkout' },
+  },
+  {
     path: 'account',
     loadChildren: () =>
       import('./account/account.routes').then((m) => m.ACCOUNT_ROUTES),
