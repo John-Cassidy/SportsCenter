@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './core/not-found/not-found.component';
 import { Routes } from '@angular/router';
 import { ServerErrorComponent } from './core/server-error/server-error.component';
+import { canActivate } from './core/guards/auth.guard';
 
 export const APP_ROUTES: Routes = [
   { path: '', component: HomeComponent, data: { breadcrumb: 'Home' } },
@@ -35,6 +36,7 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: 'checkout',
+    canActivate: [canActivate],
     loadChildren: () =>
       import('./checkout/checkout.routes').then((m) => m.CHECKOUT_ROUTES),
     data: { breadcrumb: 'Checkout' },

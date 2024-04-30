@@ -436,3 +436,11 @@ npx ng g s checkout/checkout --flat --skip-tests --dry-run
 #create checkout/checkout.routes.ts
 New-Item -Path ./src/app/checkout -Name "checkout.routes.ts" -ItemType "file"
 ```
+
+Authentication Workflow
+
+```powershell
+npx ng generate guard core/guards/auth --flat --skip-tests --dry-run
+? Which type of guard would you like to create? CanActivate
+CREATE src/app/core/guards/auth.guard.ts (133 bytes)
+```

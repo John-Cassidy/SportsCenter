@@ -1,17 +1,15 @@
 import { Address, UserAddress } from '../shared/models/Address';
 import {
   BehaviorSubject,
-  EMPTY,
   Observable,
-  Subscription,
   catchError,
   map,
   switchMap,
   tap,
   throwError,
 } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Login } from '../shared/models/Login';
 import { Register } from '../shared/models/Register';
@@ -22,11 +20,19 @@ import { User } from '../shared/models/User';
   providedIn: 'root',
 })
 export class AccountService {
+  redirectUrl: string | null = null;
   private apiUrl = 'http://localhost:5096/account';
   private userSource = new BehaviorSubject<User | null>(null);
   userSource$ = this.userSource.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  isAuthenticated(): boolean {
+    // For example, check if there's a valid JWT token in local storage
+    const token = localStorage.getItem('token');
+    // Add your logic to validate the token if necessary
+    return !!token;
+  }
 
   getToken(): string | null {
     return localStorage.getItem('token');

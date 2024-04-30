@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -19,12 +20,18 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       rememberMe: [false],
+    });
+    // Get returnUrl from route parameters or default to '/'
+    this.route.queryParams.subscribe((params) => {
+      this.accountService.redirectUrl = params['returnUrl'] || '/';
     });
   }
 
@@ -35,7 +42,12 @@ export class LoginComponent implements OnInit {
       this.accountService.login(this.loginForm.value).subscribe({
         next: (user) => {
           console.log('Login successful');
-          // Navigate to home page etc.
+          // Redirect to the stored returnUrl or to the store page if no returnUrl is available
+          const redirect = this.accountService.redirectUrl
+            ? this.accountService.redirectUrl
+            : '/store';
+          this.router.navigateByUrl(redirect); // Use navigateByUrl to handle complex URLs
+          this.accountService.redirectUrl = null; // Clear the stored URL
         },
         error: (error) => {
           console.log('Login failed');
