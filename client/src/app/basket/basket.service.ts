@@ -1,14 +1,15 @@
 import { Basket, BasketItem, BasketTotal } from '../shared/models/Basket';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
 
+import { AccountService } from '../account/account.service';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Product } from '../shared/models/Product';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BasketService {
+export class BasketService implements OnDestroy {
   private basketSubject: BehaviorSubject<Basket | null> =
     new BehaviorSubject<Basket | null>(null);
   public basketSubject$ = this.basketSubject.asObservable();
@@ -21,9 +22,34 @@ export class BasketService {
     });
   public basketTotalSubject$ = this.basketTotalSubject.asObservable();
 
+  private userSubscription: Subscription = new Subscription();
+
   private apiUrl = 'http://localhost:5096/basket';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private accountService: AccountService
+  ) {
+    this.listenToUserLogin();
+  }
+
+  private listenToUserLogin(): void {
+    this.userSubscription.add(
+      this.accountService.userSource$.subscribe((user) => {
+        if (user) {
+          this.updateBasketUserName(user.email);
+        }
+      })
+    );
+  }
+
+  private updateBasketUserName(email: string): void {
+    const basket = this.getBasketSubjectCurrentValue() ?? this.createBasket();
+    if (basket) {
+      basket.userName = email;
+      this.setBasket(basket);
+    }
+  }
 
   public getBasket(id: string): Subscription {
     return this.http.get<Basket>(`${this.apiUrl}/${id}`).subscribe({
@@ -153,5 +179,10 @@ export class BasketService {
     const subtotal = basket.items.reduce((x, y) => y.price * y.quantity + x, 0);
     const total = subtotal + shipping;
     this.basketTotalSubject.next({ shipping, total, subtotal });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe to prevent memory leaks
+    this.userSubscription.unsubscribe();
   }
 }

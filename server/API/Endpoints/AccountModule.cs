@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using API.Extensions;
 
 namespace API.Endpoints;
 
@@ -95,26 +96,7 @@ public static class AccountModule
 
         endpoints.MapGet("account/load-user", async (UserManager<ApplicationUser> userManager, ITokenGenerationService _tokenService, HttpContext context) =>
         {
-            string? userId = null;
-
-            if (context.User?.Identity?.IsAuthenticated == true)
-            {
-                // use this when the user is authenticated using the cookie (Swagger UI)
-                userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            }
-            else if (context.Request.Headers.ContainsKey("Authorization"))
-            {
-                string authorizationHeader = context.Request.Headers["Authorization"];
-                string bearerToken = authorizationHeader.Substring("Bearer ".Length);
-                var claimsPrincipal = _tokenService.ValidateToken(bearerToken);
-
-                if (claimsPrincipal == null)
-                {
-                    return Results.Unauthorized();
-                }
-
-                userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
-            }
+            string? userId = await context.GetUserIdAsync(_tokenService);
 
             if (userId == null)
             {
@@ -154,26 +136,8 @@ public static class AccountModule
 
         endpoints.MapGet("account/user-address", async (UserManager<ApplicationUser> userManager, ITokenGenerationService _tokenService, HttpContext context, ApplicationIdentityDbContext dbContext, IMapper mapper) =>
         {
-            string? userId = null;
-
-            if (context.User?.Identity?.IsAuthenticated == true)
-            {
-                // use this when the user is authenticated using the cookie (Swagger UI)
-                userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            }
-            else if (context.Request.Headers.ContainsKey("Authorization"))
-            {
-                string authorizationHeader = context.Request.Headers["Authorization"];
-                string bearerToken = authorizationHeader.Substring("Bearer ".Length);
-                var claimsPrincipal = _tokenService.ValidateToken(bearerToken);
-
-                if (claimsPrincipal == null)
-                {
-                    return Results.Unauthorized();
-                }
-
-                userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
-            }
+            string? userId = await context.GetUserIdAsync(_tokenService);
+            string? userName = await context.GetUserNameAsync(_tokenService);
 
             if (userId == null)
             {
@@ -228,26 +192,7 @@ public static class AccountModule
                 //     return BadRequest(ModelState);
                 // }
 
-                string? userId = null;
-
-                if (context.User?.Identity?.IsAuthenticated == true)
-                {
-                    // use this when the user is authenticated using the cookie (Swagger UI)
-                    userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                }
-                else if (context.Request.Headers.ContainsKey("Authorization"))
-                {
-                    string authorizationHeader = context.Request.Headers["Authorization"];
-                    string bearerToken = authorizationHeader.Substring("Bearer ".Length);
-                    var claimsPrincipal = _tokenService.ValidateToken(bearerToken);
-
-                    if (claimsPrincipal == null)
-                    {
-                        return Results.Unauthorized();
-                    }
-
-                    userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
-                }
+                string? userId = await context.GetUserIdAsync(_tokenService);
 
                 if (userId == null)
                 {

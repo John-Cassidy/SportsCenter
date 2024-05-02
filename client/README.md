@@ -454,3 +454,15 @@ npx ng g c checkout/shipment --standalone --skip-tests=true --dry-run
 
 npx ng g c checkout/review --standalone --skip-tests=true --dry-run
 ```
+
+## Stripe
+
+[How to Integrate Stripe Payments with Angular — The Right Software](https://medium.com/@therightsw.com/how-to-integrate-stripe-payments-with-angular-the-right-software-03ce83e75e56)
+
+[https://dashboard.stripe.com/test/dashboard](https://dashboard.stripe.com/test/dashboard)
+
+[StackBlitz Demo - Angular 17 Standalone components w/Stripe](https://stackblitz.com/edit/ngx-stripe-live?file=src%2Fmain.ts)
+
+```powershell
+
+```

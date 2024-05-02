@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface Basket {
   id: string;
+  userName: string;
   items: BasketItem[];
 }
 
@@ -17,10 +18,16 @@ export interface BasketItem {
 
 export class Basket implements Basket {
   id: string;
+  userName: string;
   items: BasketItem[];
 
-  constructor(id: string = '', items: BasketItem[] = []) {
+  constructor(
+    id: string = '',
+    userName: string = '',
+    items: BasketItem[] = []
+  ) {
     this.id = id || uuidv4(); // Generate a GUID if the id is empty
+    this.userName = userName;
     this.items = items;
   }
 }
