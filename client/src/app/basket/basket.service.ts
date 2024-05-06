@@ -67,6 +67,9 @@ export class BasketService implements OnDestroy {
     return this.http.post<Basket>(this.apiUrl, basket).subscribe({
       next: (updatedBasket) => {
         this.basketSubject.next(updatedBasket);
+        if (basket.id !== updatedBasket.id) {
+          localStorage.setItem('basket_id', updatedBasket.id);
+        }
         this.calculateTotal();
       },
       error: (error) => {

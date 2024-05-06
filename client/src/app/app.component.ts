@@ -23,6 +23,10 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.loadUser();
     this.loadBasket();
+
+    let unix_timestamp = 1714677313;
+    let date = new Date(unix_timestamp * 1000); // JavaScript uses milliseconds
+    console.log(date);
   }
 
   loadBasket() {

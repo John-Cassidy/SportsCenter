@@ -21,6 +21,16 @@ public static class BasketModule
         endpoints.MapPost("/basket",
             async (IBasketRepository basketRepository, Basket basket) =>
             {
+                if (basket.UserName != null && basket.UserName != basket.Id)
+                {
+                    var existingBasket = await basketRepository.GetBasketAsync(basket.Id);
+                    if (existingBasket != null)
+                    {
+                        await basketRepository.DeleteBasketAsync(existingBasket.Id);
+                    }
+                    basket.Id = basket.UserName;
+                    basket.UserName = null;
+                }
                 var updatedBasket = await basketRepository.UpdateBasketAsync(basket);
                 return Results.Ok(updatedBasket);
             })

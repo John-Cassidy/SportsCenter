@@ -155,7 +155,10 @@ export class AccountService {
             }
           },
           error: (error: any) => {
-            console.error('Error in loadUser:', error);
+            this.userSource.next(null);
+            localStorage.removeItem('token');
+            localStorage.removeItem('userAddress');
+            console.error('Error in loadUser:', 'token expired');
           },
         });
     } else {
