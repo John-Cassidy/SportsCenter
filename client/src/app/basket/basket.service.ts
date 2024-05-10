@@ -1,4 +1,9 @@
-import { Basket, BasketItem, BasketTotal } from '../shared/models/Basket';
+import {
+  Basket,
+  BasketCheckout,
+  BasketItem,
+  BasketTotal,
+} from '../shared/models/Basket';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 
@@ -78,6 +83,21 @@ export class BasketService implements OnDestroy {
     });
   }
 
+  public checkoutBasket(basketCheckout: BasketCheckout) {
+    return this.http
+      .post<boolean>(`${this.apiUrl}/checkout`, basketCheckout)
+      .subscribe({
+        next: (result) => {
+          if (result) {
+            this.clearBasket();
+          }
+        },
+        error: (error) => {
+          console.log('Error checkout basket;', error);
+        },
+      });
+  }
+
   public getBasketSubjectCurrentValue() {
     return this.basketSubject.value;
   }
@@ -85,6 +105,7 @@ export class BasketService implements OnDestroy {
   public clearBasket(): void {
     this.basketSubject.next(null);
     localStorage.removeItem('basket_id');
+    this.basketTotalSubject.next({ shipping: 0, total: 0, subtotal: 0 });
   }
 
   public addItemToBasket(item: Product, quantity = 1) {

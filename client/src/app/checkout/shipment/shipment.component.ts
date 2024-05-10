@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+import { CoreComponent } from '../../core';
+import { SharedComponent } from '../../shared';
+
 @Component({
   selector: 'app-shipment',
   standalone: true,
-  imports: [],
+  imports: [CoreComponent, SharedComponent],
   templateUrl: './shipment.component.html',
   styleUrl: './shipment.component.scss',
 })

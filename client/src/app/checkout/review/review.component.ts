@@ -2,12 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Basket } from '../../shared/models/Basket';
 import { BasketService } from '../../basket/basket.service';
+import { CoreComponent } from '../../core';
+import { SharedComponent } from '../../shared';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-review',
   standalone: true,
-  imports: [],
+  imports: [CoreComponent, SharedComponent],
   templateUrl: './review.component.html',
   styleUrl: './review.component.scss',
 })

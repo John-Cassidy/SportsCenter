@@ -1,1 +1,140 @@
-<p>address works!</p>
+<form
+  [formGroup]="addressForm"
+  (ngSubmit)="submitAddress()"
+  class="address-form"
+>
+  <div class="mb-3">
+    <label for="firstName" class="form-label"
+      ><i class="fa fa-user"></i> First Name</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="firstName"
+      formControlName="firstName"
+      required
+    />
+    <div
+      *ngIf="
+        addressForm.get('firstName')?.hasError('required') &&
+        addressForm.get('firstName')?.touched
+      "
+      class="text-danger"
+    >
+      First Name is required.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="lastName" class="form-label"
+      ><i class="fa fa-user"></i> Last Name</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="lastName"
+      formControlName="lastName"
+      required
+    />
+    <div
+      *ngIf="
+        addressForm.get('lastName')?.hasError('required') &&
+        addressForm.get('lastName')?.touched
+      "
+      class="text-danger"
+    >
+      Last Name is required.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="street" class="form-label"
+      ><i class="fa fa-map-marker-alt"></i> Street</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="street"
+      formControlName="street"
+      required
+    />
+    <div
+      *ngIf="
+        addressForm.get('street')?.hasError('required') &&
+        addressForm.get('street')?.touched
+      "
+      class="text-danger"
+    >
+      Street is required.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="city" class="form-label"><i class="fa fa-city"></i> City</label>
+    <input
+      type="text"
+      class="form-control"
+      id="city"
+      formControlName="city"
+      required
+    />
+    <div
+      *ngIf="
+        addressForm.get('city')?.hasError('required') &&
+        addressForm.get('city')?.touched
+      "
+      class="text-danger"
+    >
+      City is required.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="state" class="form-label"
+      ><i class="fa fa-flag"></i> State</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="state"
+      formControlName="state"
+      required
+    />
+    <div
+      *ngIf="
+        addressForm.get('state')?.hasError('required') &&
+        addressForm.get('state')?.touched
+      "
+      class="text-danger"
+    >
+      State is required.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="zipCode" class="form-label"
+      ><i class="fa fa-envelope"></i> Zip Code</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="zipCode"
+      formControlName="zipCode"
+      required
+    />
+    <div
+      *ngIf="
+        addressForm.get('zipCode')?.hasError('required') &&
+        addressForm.get('zipCode')?.touched
+      "
+      class="text-danger"
+    >
+      Zip Code is required.
+    </div>
+    <div
+      *ngIf="
+        addressForm.get('zipCode')?.hasError('pattern') &&
+        addressForm.get('zipCode')?.touched
+      "
+      class="text-danger"
+    >
+      Invalid ZIP code.
+    </div>
+  </div>
+  <button type="submit" [disabled]="!addressForm.valid">Next</button>
+</form>

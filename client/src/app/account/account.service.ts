@@ -199,4 +199,9 @@ export class AccountService {
         .subscribe();
     }
   }
+
+  getUserAddress(): UserAddress | null {
+    const userAddress = localStorage.getItem('userAddress');
+    return userAddress ? JSON.parse(userAddress) : null;
+  }
 }

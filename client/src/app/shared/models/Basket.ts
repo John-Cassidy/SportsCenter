@@ -1,3 +1,5 @@
+import { Address } from './Address';
+import { DeliveryOption } from './DeliveryOption';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface Basket {
@@ -36,4 +38,60 @@ export interface BasketTotal {
   shipping: number;
   subtotal: number;
   total: number;
+}
+
+export interface BasketCheckout {
+  basketId: string;
+  userName: string;
+  shippingAddress: Address;
+  deliveryOption: DeliveryOption | null;
+  basketTotal: BasketTotal;
+}
+
+export class BasketCheckout implements BasketCheckout {
+  basketId: string;
+  userName: string;
+  shippingAddress: Address;
+  deliveryOption: DeliveryOption | null;
+  basketTotal: BasketTotal;
+
+  constructor(
+    basketId: string = '',
+    userName: string = '',
+    shippingAddress: Address = {
+      firstName: '',
+      lastName: '',
+      street: '',
+      city: '',
+      state: '',
+      zipCode: '',
+    },
+    deliveryOption: DeliveryOption | null = null,
+    basketTotal: BasketTotal = { shipping: 0, subtotal: 0, total: 0 }
+  ) {
+    this.basketId = basketId;
+    this.userName = userName;
+    this.shippingAddress = shippingAddress;
+    this.deliveryOption = null;
+    this.basketTotal = basketTotal;
+  }
+
+  setDeliveryOption(deliveryOption: DeliveryOption | null) {
+    this.deliveryOption = deliveryOption;
+    this.basketTotal.shipping = deliveryOption?.price ?? 0;
+    this.basketTotal.total =
+      this.basketTotal.subtotal + this.basketTotal.shipping;
+  }
+
+  validate(): boolean {
+    return (
+      this.shippingAddress.firstName !== '' &&
+      this.shippingAddress.lastName !== '' &&
+      this.shippingAddress.street !== '' &&
+      this.shippingAddress.city !== '' &&
+      this.shippingAddress.state !== '' &&
+      this.shippingAddress.zipCode !== '' &&
+      this.deliveryOption !== null
+    );
+  }
 }

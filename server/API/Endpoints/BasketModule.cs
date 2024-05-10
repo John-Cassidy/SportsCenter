@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using API.DTOs;
+using Core.Entities;
 using Core.Repositories;
 
 namespace API.Endpoints;
@@ -48,6 +49,25 @@ public static class BasketModule
             .WithName("DeleteBasket")
             .Produces<bool>(StatusCodes.Status200OK)
             .Produces<string>(StatusCodes.Status400BadRequest)
+            .Produces<string>(StatusCodes.Status500InternalServerError);
+
+        endpoints.MapPost("/basket/checkout",
+            async (IBasketRepository basketRepository, BasketCheckoutDto basketCheckout) =>
+            {
+                var basket = await basketRepository.GetBasketAsync(basketCheckout.BasketId);
+                if (basket == null)
+                {
+                    return Results.NotFound($"Basket with id {basketCheckout.BasketId} not found");
+                }
+
+                var result = await basketRepository.DeleteBasketAsync(basket.Id);
+
+                return Results.Ok(result);
+            })
+            .WithName("CheckoutBasket")
+            .Produces<bool>(StatusCodes.Status200OK)
+            .Produces<string>(StatusCodes.Status400BadRequest)
+            .Produces<string>(StatusCodes.Status404NotFound)
             .Produces<string>(StatusCodes.Status500InternalServerError);
 
         return endpoints;

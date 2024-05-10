@@ -443,9 +443,10 @@ To create a multi-page checkout process, you can use Angular's routing and forms
 2. In the Address component, use Angular's FormBuilder to create a form that includes inputs for each property in the Address interface.
 3. In the Shipment component, use FormBuilder to create a form that includes a radio input for the property name deliveryOption.
 4. In the Review component, display properties of each item in the basket. The user should not be able to modify item counts or remove items.
-5. In the Checkout component, use Angular's Router to display one component at a time. The router should be configured to display the Address component by default.
-6. Create a navigation bar with three tabs: Address, Shipment, and Review. When a tab is clicked, the router should navigate to the corresponding component.
-7. The Checkout page should be divided into two sections: the tabs on the left and the order summary on the right.
+5. In the Confirmation component, display confirmation to user that their checkout process completed successfully.
+6. In the Checkout component, use Angular's Router to display one component at a time. The router should be configured to display the Address component by default.
+7. Create a navigation bar with three tabs: Address, Shipment, and Review. When a tab is clicked, the router should navigate to the corresponding component.
+8. The Checkout page should be divided into two sections: the tabs on the left and the order summary on the right.
 
 ```powershell
 npx ng g c checkout/address --standalone --skip-tests=true --dry-run
@@ -453,6 +454,8 @@ npx ng g c checkout/address --standalone --skip-tests=true --dry-run
 npx ng g c checkout/shipment --standalone --skip-tests=true --dry-run
 
 npx ng g c checkout/review --standalone --skip-tests=true --dry-run
+
+npx ng g c checkout/confirmation --standalone --skip-tests=true --dry-run
 ```
 
 ## Stripe

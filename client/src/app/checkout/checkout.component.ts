@@ -1,22 +1,89 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
+import { AccountService } from '../account/account.service';
+import { Address } from '../shared/models/Address';
+import { AddressComponent } from './address/address.component';
+import { BasketCheckout } from '../shared/models/Basket';
+import { BasketService } from '../basket/basket.service';
+import { CheckoutService } from './checkout.service';
+import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { CoreComponent } from '../core';
 import { OrderSummaryComponent } from '../shared/order-summary/order-summary.component';
+import { ReviewComponent } from './review/review.component';
 import { SharedComponent } from '../shared';
+import { ShipmentComponent } from './shipment/shipment.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CoreComponent, SharedComponent, OrderSummaryComponent],
+  imports: [
+    CoreComponent,
+    SharedComponent,
+    OrderSummaryComponent,
+    ShipmentComponent,
+    AddressComponent,
+    ReviewComponent,
+    ConfirmationComponent,
+  ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
 })
 export class CheckoutComponent implements OnInit {
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  basketCheckout: BasketCheckout = new BasketCheckout();
+  private subscriptions: Subscription[] = [];
+
+  currentStep: 'address' | 'shipment' | 'review' | 'confirmation' = 'address';
+
+  setCurrentStep(step: 'address' | 'shipment' | 'review' | 'confirmation') {
+    this.currentStep = step;
+  }
+
+  constructor(
+    private checkoutService: CheckoutService,
+    private basketService: BasketService,
+    private accountService: AccountService
+  ) {}
 
   ngOnInit(): void {
-    const url = `checkout/address`;
-    this.router.navigate(['address'], { relativeTo: this.route });
+    this.subscriptions.push(
+      this.basketService.basketSubject$.subscribe((basket) => {
+        if (basket) {
+          this.basketCheckout.basketId = basket.id;
+          this.basketCheckout.userName = basket.userName;
+        } else {
+          this.setCurrentStep('confirmation');
+        }
+      })
+    );
+
+    // Subscribe to basketTotalSubject$ observable
+    this.subscriptions.push(
+      this.basketService.basketTotalSubject$.subscribe((basketTotal) => {
+        this.basketCheckout.basketTotal = basketTotal;
+      })
+    );
+
+    const userAddress = this.accountService.getUserAddress();
+    if (userAddress && userAddress.address) {
+      this.basketCheckout.shippingAddress = userAddress.address;
+    }
+  }
+
+  onAddressSubmitted(address: Address): void {
+    this.basketCheckout.shippingAddress = address;
+    this.setCurrentStep('shipment');
+  }
+
+  submitCheckout(): void {
+    if (this.basketCheckout.validate()) {
+      this.basketService.checkoutBasket(this.basketCheckout);
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions to prevent memory leaks
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }
