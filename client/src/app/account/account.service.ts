@@ -3,7 +3,9 @@ import {
   BehaviorSubject,
   Observable,
   catchError,
+  concatMap,
   map,
+  of,
   switchMap,
   tap,
   throwError,
@@ -45,10 +47,15 @@ export class AccountService {
         if (user) {
           localStorage.setItem('token', user.token);
           this.userSource.next(user);
-          this.loadUserAddress();
         }
-        return user;
-      })
+      }),
+      switchMap((user: User) =>
+        this.loadUserAddress().pipe(
+          map(() => {
+            return user;
+          })
+        )
+      )
     );
   }
 
@@ -140,63 +147,68 @@ export class AccountService {
   //     });
   // }
 
-  loadUser() {
+  loadUser(): Observable<User | null> {
     const token = localStorage.getItem('token');
     if (token) {
-      this.http
-        .get<User>(this.apiUrl + '/load-user')
-        .pipe(map((response) => response as User))
-        .subscribe({
-          next: (user: User) => {
-            if (user) {
-              localStorage.setItem('token', user.token);
-              this.userSource.next(user);
-              this.loadUserAddress();
-            }
-          },
-          error: (error: any) => {
-            this.userSource.next(null);
-            localStorage.removeItem('token');
-            localStorage.removeItem('userAddress');
-            console.error('Error in loadUser:', 'token expired');
-          },
-        });
+      return this.http.get<User>(this.apiUrl + '/load-user').pipe(
+        map((response) => response as User),
+        tap((user: User) => {
+          if (user) {
+            localStorage.setItem('token', user.token);
+            this.userSource.next(user);
+          }
+        }),
+        concatMap((user: User) =>
+          this.loadUserAddress().pipe(
+            map((userAddress: UserAddress | null) => {
+              return user;
+            })
+          )
+        ),
+        catchError((error: any) => {
+          this.userSource.next(null);
+          localStorage.removeItem('token');
+          localStorage.removeItem('userAddress');
+          console.error('Error in loadUser:', 'token expired');
+          return of(null);
+        })
+      );
     } else {
       this.userSource.next(null);
       localStorage.removeItem('userAddress');
+      return of(null);
     }
   }
 
-  loadUserAddress() {
+  loadUserAddress(): Observable<UserAddress | null> {
     const token = localStorage.getItem('token');
     if (token) {
-      this.http
-        .get<Address>(this.apiUrl + '/user-address')
-        .pipe(
-          map((address: Address) => {
-            // Get the current user from userSource
-            const user = this.userSource.value;
-            // If user is null, throw an error
-            if (!user) {
-              throw new Error('User is null');
-            }
-            // Create a new UserAddress object
-            const userAddress: UserAddress = {
-              email: user.email,
-              address: address,
-            };
-            return userAddress;
-          }),
-          tap((userAddress: UserAddress) => {
-            // Store the userAddress in localStorage
-            localStorage.setItem('userAddress', JSON.stringify(userAddress));
-          }),
-          catchError((error: any) => {
-            console.error('Error in getUserAddress:', error);
-            throw error;
-          })
-        )
-        .subscribe();
+      return this.http.get<Address>(this.apiUrl + '/user-address').pipe(
+        map((address: Address) => {
+          // Get the current user from userSource
+          const user = this.userSource.value;
+          // If user is null, throw an error
+          if (!user) {
+            throw new Error('User is null');
+          }
+          // Create a new UserAddress object
+          const userAddress: UserAddress = {
+            email: user.email,
+            address: address,
+          };
+          return userAddress;
+        }),
+        tap((userAddress: UserAddress) => {
+          // Store the userAddress in localStorage
+          localStorage.setItem('userAddress', JSON.stringify(userAddress));
+        }),
+        catchError((error: any) => {
+          console.error('Error in getUserAddress:', error);
+          throw error;
+        })
+      );
+    } else {
+      return of(null);
     }
   }
 
