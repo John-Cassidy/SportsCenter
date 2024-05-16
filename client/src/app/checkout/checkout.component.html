@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-8">
       <!-- Checkout Wizard -->
-      <ul class="nav nav-pills">
+      <ul class="nav nav-pills" *ngIf="currentStep !== 'confirmation'">
         <li class="nav-item">
           <a
             class="nav-link"
@@ -39,7 +39,10 @@
 
       <!-- Shipment Section -->
       <div *ngIf="currentStep === 'shipment'">
-        <app-shipment></app-shipment>
+        <app-shipment
+          [deliveryOption]="basketCheckout.deliveryOption"
+          (shippingOptionSubmitted)="onShippingOptionSubmitted($event)"
+        ></app-shipment>
       </div>
 
       <!-- Review Section -->
@@ -47,7 +50,10 @@
         <app-review></app-review>
       </div>
       <div *ngIf="currentStep === 'review'">
-        <button (click)="submitCheckout()" [disabled]="basketCheckout.validate">
+        <button
+          (click)="submitCheckout()"
+          [disabled]="!basketCheckout.validate"
+        >
           Submit Checkout
         </button>
       </div>

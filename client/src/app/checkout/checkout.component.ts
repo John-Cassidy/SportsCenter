@@ -9,6 +9,7 @@ import { BasketService } from '../basket/basket.service';
 import { CheckoutService } from './checkout.service';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { CoreComponent } from '../core';
+import { DeliveryOption } from '../shared/models/DeliveryOption';
 import { OrderSummaryComponent } from '../shared/order-summary/order-summary.component';
 import { ReviewComponent } from './review/review.component';
 import { SharedComponent } from '../shared';
@@ -74,6 +75,11 @@ export class CheckoutComponent implements OnInit {
   onAddressSubmitted(address: Address): void {
     this.basketCheckout.shippingAddress = address;
     this.setCurrentStep('shipment');
+  }
+
+  onShippingOptionSubmitted(deliveryOption: DeliveryOption): void {
+    this.basketCheckout.setDeliveryOption(deliveryOption);
+    this.setCurrentStep('review');
   }
 
   submitCheckout(): void {
