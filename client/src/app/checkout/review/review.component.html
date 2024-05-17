@@ -1,1 +1,41 @@
-<p>review works!</p>
+<div *ngIf="reviewCheckout">
+  <h3>Personal Information</h3>
+  <p>
+    <strong>First Name:</strong>
+    {{ reviewCheckout.shippingAddress.firstName }}
+  </p>
+  <p>
+    <strong>Last Name:</strong>
+    {{ reviewCheckout.shippingAddress.lastName }}
+  </p>
+  <p><strong>Email:</strong> {{ reviewCheckout.basketId }}</p>
+
+  <h3>Shipping Address</h3>
+  <p><strong>Street:</strong> {{ reviewCheckout.shippingAddress.street }}</p>
+  <p><strong>City:</strong> {{ reviewCheckout.shippingAddress.city }}</p>
+  <p><strong>State:</strong> {{ reviewCheckout.shippingAddress.state }}</p>
+  <p>
+    <strong>Zip Code:</strong>
+    {{ reviewCheckout.shippingAddress.zipCode }}
+  </p>
+
+  <h3>Delivery Option</h3>
+  <p><strong>Name:</strong> {{ reviewCheckout.deliveryOption?.name }}</p>
+  <p>
+    <strong>Delivery Time:</strong>
+    {{ reviewCheckout.deliveryOption?.deliveryTime }}
+  </p>
+  <p>
+    <strong>Description:</strong>
+    {{ reviewCheckout.deliveryOption?.description }}
+  </p>
+
+  <div>
+    <a class="btn btn-danger mt-3" routerLink="/store"
+      ><i class="fa fa-shopping-basket"></i> Continue Shopping</a
+    >
+  </div>
+</div>
+<div *ngIf="!reviewCheckout">
+  <p>No checkout information available.</p>
+</div>

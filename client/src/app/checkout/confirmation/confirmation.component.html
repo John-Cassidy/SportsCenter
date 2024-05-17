@@ -1,1 +1,47 @@
-<p>confirmation works!</p>
+<div *ngIf="confirmationCheckout">
+  <h2>Thank you for shopping at SportCenter.</h2>
+
+  <h3>Personal Information</h3>
+  <p>
+    <strong>First Name:</strong>
+    {{ confirmationCheckout.shippingAddress.firstName }}
+  </p>
+  <p>
+    <strong>Last Name:</strong>
+    {{ confirmationCheckout.shippingAddress.lastName }}
+  </p>
+  <p><strong>Email:</strong> {{ confirmationCheckout.basketId }}</p>
+
+  <h3>Shipping Address</h3>
+  <p>
+    <strong>Street:</strong> {{ confirmationCheckout.shippingAddress.street }}
+  </p>
+  <p><strong>City:</strong> {{ confirmationCheckout.shippingAddress.city }}</p>
+  <p>
+    <strong>State:</strong> {{ confirmationCheckout.shippingAddress.state }}
+  </p>
+  <p>
+    <strong>Zip Code:</strong>
+    {{ confirmationCheckout.shippingAddress.zipCode }}
+  </p>
+
+  <h3>Delivery Option</h3>
+  <p><strong>Name:</strong> {{ confirmationCheckout.deliveryOption?.name }}</p>
+  <p>
+    <strong>Delivery Time:</strong>
+    {{ confirmationCheckout.deliveryOption?.deliveryTime }}
+  </p>
+  <p>
+    <strong>Description:</strong>
+    {{ confirmationCheckout.deliveryOption?.description }}
+  </p>
+
+  <div>
+    <a class="btn btn-success mt-3" routerLink="/store"
+      ><i class="fa fa-shopping-basket"></i> Continue Shopping</a
+    >
+  </div>
+</div>
+<div *ngIf="!confirmationCheckout">
+  <p>No checkout information available.</p>
+</div>

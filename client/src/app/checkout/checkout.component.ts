@@ -15,6 +15,7 @@ import { ReviewComponent } from './review/review.component';
 import { SharedComponent } from '../shared';
 import { ShipmentComponent } from './shipment/shipment.component';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-checkout',
@@ -33,6 +34,7 @@ import { Subscription } from 'rxjs';
 })
 export class CheckoutComponent implements OnInit {
   basketCheckout: BasketCheckout = new BasketCheckout();
+  confirmationCheckout: BasketCheckout | null = null;
   private subscriptions: Subscription[] = [];
 
   currentStep: 'address' | 'shipment' | 'review' | 'confirmation' = 'address';
@@ -44,7 +46,8 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private checkoutService: CheckoutService,
     private basketService: BasketService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -53,8 +56,6 @@ export class CheckoutComponent implements OnInit {
         if (basket) {
           this.basketCheckout.basketId = basket.id;
           this.basketCheckout.userName = basket.userName;
-        } else {
-          this.setCurrentStep('confirmation');
         }
       })
     );
@@ -84,7 +85,28 @@ export class CheckoutComponent implements OnInit {
 
   submitCheckout(): void {
     if (this.basketCheckout.validate()) {
-      this.basketService.checkoutBasket(this.basketCheckout);
+      this.confirmationCheckout = JSON.parse(
+        JSON.stringify(this.basketCheckout)
+      );
+      this.basketService.checkoutBasket(this.basketCheckout).subscribe(
+        (result) => {
+          if (result) {
+            // checkout successful
+            this.toastr.success('Checkout successful');
+            this.setCurrentStep('confirmation');
+          } else {
+            // checkout failed
+            // Show a Toastr error message
+            this.toastr.error('Checkout failed');
+          }
+        },
+        (error) => {
+          // handle error
+          console.log('Error:', error);
+          // Show a Toastr error message
+          this.toastr.error('Checkout failed');
+        }
+      );
     }
   }
 

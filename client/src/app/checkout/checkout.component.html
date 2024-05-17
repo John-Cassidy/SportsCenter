@@ -47,20 +47,24 @@
 
       <!-- Review Section -->
       <div *ngIf="currentStep === 'review'">
-        <app-review></app-review>
+        <app-review [reviewCheckout]="basketCheckout"></app-review>
       </div>
-      <div *ngIf="currentStep === 'review'">
+      <div class="d-grid" *ngIf="currentStep === 'review'">
         <button
+          class="btn btn-success mt-3"
           (click)="submitCheckout()"
           [disabled]="!basketCheckout.validate"
         >
           Submit Checkout
         </button>
+        <br />
       </div>
 
       <!-- Confirmation Section -->
       <div *ngIf="currentStep === 'confirmation'">
-        <app-confirmation></app-confirmation>
+        <app-confirmation
+          [confirmationCheckout]="confirmationCheckout"
+        ></app-confirmation>
       </div>
     </div>
     <div class="col-md-4">

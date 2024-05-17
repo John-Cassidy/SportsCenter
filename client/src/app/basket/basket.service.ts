@@ -4,12 +4,13 @@ import {
   BasketItem,
   BasketTotal,
 } from '../shared/models/Basket';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 
 import { AccountService } from '../account/account.service';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../shared/models/Product';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -83,19 +84,31 @@ export class BasketService implements OnDestroy {
     });
   }
 
-  public checkoutBasket(basketCheckout: BasketCheckout) {
-    return this.http
-      .post<boolean>(`${this.apiUrl}/checkout`, basketCheckout)
-      .subscribe({
-        next: (result) => {
-          if (result) {
-            this.clearBasket();
-          }
-        },
-        error: (error) => {
-          console.log('Error checkout basket;', error);
-        },
-      });
+  public checkoutBasket(basketCheckout: BasketCheckout): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      this.http
+        .post<boolean>(`${this.apiUrl}/checkout`, basketCheckout)
+        .pipe(
+          catchError((error) => {
+            console.log('Error checkout basket;', error);
+            return throwError(error);
+          })
+        )
+        .subscribe({
+          next: (result) => {
+            if (result) {
+              this.clearBasket();
+              observer.next(true);
+            } else {
+              observer.next(false);
+            }
+            observer.complete();
+          },
+          error: (error) => {
+            observer.error(error);
+          },
+        });
+    });
   }
 
   public getBasketSubjectCurrentValue() {

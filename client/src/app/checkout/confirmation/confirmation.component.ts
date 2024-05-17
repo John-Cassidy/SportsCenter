@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+
+import { BasketCheckout } from '../../shared/models/Basket';
 import { CoreComponent } from '../../core';
 import { SharedComponent } from '../../shared';
 
@@ -9,4 +11,6 @@ import { SharedComponent } from '../../shared';
   templateUrl: './confirmation.component.html',
   styleUrl: './confirmation.component.scss',
 })
-export class ConfirmationComponent {}
+export class ConfirmationComponent {
+  @Input() confirmationCheckout: BasketCheckout | null = null;
+}
